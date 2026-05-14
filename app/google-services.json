@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "770818568477",
+    "project_id": "progresspath-666fd",
+    "storage_bucket": "progresspath-666fd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770818568477:android:3944c144b2f65b5841b1f4",
+        "android_client_info": {
+          "package_name": "net.abaresults.progresspath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL2RU2PxLIAZqL349xIyWHDU68hq8J1mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

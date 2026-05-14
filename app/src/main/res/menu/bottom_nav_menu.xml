@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/clinicsFragment"
+        android:icon="@drawable/ic_home_24"
+        android:title="Clinics" />
+
+    <item
+        android:id="@+id/objLibraryFragment"
+        android:icon="@drawable/ic_obj_library"
+        android:title="Objective Library" />
+
+    <item
+        android:id="@+id/myAccountFragment"
+        android:icon="@drawable/ic_account"
+        android:title="My Account" />
+</menu>

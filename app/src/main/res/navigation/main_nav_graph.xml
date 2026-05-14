@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="net.abaresults.progresspath.view.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="net.abaresults.progresspath.view.register.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register" />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="net.abaresults.progresspath.view.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="net.abaresults.progresspath.view.more.MoreFragment"
+        android:label="More"
+        tools:layout="@layout/fragment_more" />
+
+    <fragment
+        android:id="@+id/myAccountFragment"
+        android:name="net.abaresults.progresspath.view.my_account.MyAccountFragment"
+        android:label="My Account"
+        tools:layout="@layout/fragment_my_account" />
+
+    <fragment
+        android:id="@+id/clinicsFragment"
+        android:name="net.abaresults.progresspath.view.clinics.ClinicsFragment"
+        android:label="Clinics"
+        tools:layout="@layout/fragment_clinics" />
+
+    <fragment
+        android:id="@+id/addClinicFragment"
+        android:name="net.abaresults.progresspath.view.clinics.add_clinic.AddClinicFragment"
+        android:label="Add Clinic"
+        tools:layout="@layout/fragment_add_clinic" />
+
+    <fragment
+        android:id="@+id/kidsFragment"
+        android:name="net.abaresults.progresspath.view.kids.KidsFragment"
+        android:label="Kids"
+        tools:layout="@layout/fragment_kids" />
+
+    <fragment
+        android:id="@+id/addKidFragment"
+        android:name="net.abaresults.progresspath.view.kids.add_kid.AddKidFragment"
+        android:label="Add Kid"
+        tools:layout="@layout/fragment_add_kid" />
+
+    <fragment
+        android:id="@+id/objectivesFragment"
+        android:name="net.abaresults.progresspath.view.objectives.ObjectivesFragment"
+        android:label="Objectives"
+        tools:layout="@layout/fragment_objectives" />
+
+    <fragment
+        android:id="@+id/addObjectiveFragment"
+        android:name="net.abaresults.progresspath.view.objectives.add_objective.AddObjectiveFragment"
+        android:label="Add Objective"
+        tools:layout="@layout/fragment_add_objective" />
+
+    <fragment
+        android:id="@+id/itemsFragment"
+        android:name="net.abaresults.progresspath.view.items.ItemsFragment"
+        android:label="Items"
+        tools:layout="@layout/fragment_items" />
+
+    <fragment
+        android:id="@+id/therapistsFragment"
+        android:name="net.abaresults.progresspath.view.therapists.TherapistFragment"
+        android:label="Therapists"
+        tools:layout="@layout/fragment_therapists">
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTherapistFragment"
+        android:name="net.abaresults.progresspath.view.therapists.add_therapist.AddTherapistFragment"
+        android:label="Add Therapist"
+        tools:layout="@layout/fragment_add_therapist" />
+
+    <fragment
+        android:id="@+id/coordinatorFragment"
+        android:name="net.abaresults.progresspath.view.coordinator.CoordinatorFragment"
+        android:label="Coordinator"
+        tools:layout="@layout/fragment_coordinator" />
+
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="net.abaresults.progresspath.view.report.ReportFragment"
+        android:label="Report"
+        tools:layout="@layout/fragment_report" />
+
+    <fragment
+        android:id="@+id/objLibraryFragment"
+        android:name="net.abaresults.progresspath.view.obj_library.ObjLibraryFragment"
+        android:label="Objective Library"
+        tools:layout="@layout/fragment_obj_library" />
+
+    <fragment
+        android:id="@+id/addObjLibraryFragment"
+        android:name="net.abaresults.progresspath.view.obj_library.add_objective.AddObjLibraryFragment"
+        android:label="Add Objective"
+        tools:layout="@layout/fragment_add_obj_library" />
+
+    <fragment
+        android:id="@+id/objectiveTypesFragment"
+        android:name="net.abaresults.progresspath.view.obj_library.objective_type.ObjectiveTypesFragment"
+        android:label="Objective Types"
+        tools:layout="@layout/fragment_objective_types" />
+
+    <fragment
+        android:id="@+id/objItemLibraryFragment"
+        android:name="net.abaresults.progresspath.view.obj_item_library.ObjItemLibraryFragment"
+        android:label="Objective Items"
+        tools:layout="@layout/fragment_obj_item_library" />
+
+    <fragment
+        android:id="@+id/addObjItemFragment"
+        android:name="net.abaresults.progresspath.view.obj_item_library.add_item.AddObjItemFragment"
+        android:label="Add Item"
+        tools:layout="@layout/fragment_add_obj_item" />
+
+    <fragment
+        android:id="@+id/chartFragment"
+        android:name="net.abaresults.progresspath.view.chart.ChartFragment"
+        android:label="Chart"
+        tools:layout="@layout/fragment_chart" />
+
+</navigation>
