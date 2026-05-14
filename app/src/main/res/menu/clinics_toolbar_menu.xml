@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_coordinator"
-        android:icon="@drawable/ic_coordinator"
-        android:title="Coordinator"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_therapists"
         android:icon="@drawable/ic_therapists"
         android:title="Therapists"

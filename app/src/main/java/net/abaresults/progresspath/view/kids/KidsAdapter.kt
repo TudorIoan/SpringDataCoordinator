@@ -13,7 +13,6 @@ class KidsAdapter(
     val onItemClicked: (Kid) -> Unit,
     val onItemEdit: (Kid) -> Unit,
     val onItemRemove: (Kid) -> Unit,
-    val onGenerateKidWorksheet: (Kid) -> Unit,
 ) :
     RecyclerView.Adapter<KidsAdapter.ViewHolder>() {
 
@@ -39,7 +38,7 @@ class KidsAdapter(
         // Hide buttons layout initially
         holder.binding.buttonsLayout.root.isVisible = false
 
-        holder.binding.worksheetBtn.isVisible = userType == UserType.THERAPIST
+        holder.binding.worksheetBtn.isVisible = false
 
         holder.binding.root.setOnClickListener {
             if (holder.binding.buttonsLayout.root.isVisible == false) {
@@ -54,10 +53,6 @@ class KidsAdapter(
                 holder.binding.buttonsLayout.root.isVisible = true
                 true
             } else false
-        }
-
-        holder.binding.worksheetBtn.setOnClickListener {
-            onGenerateKidWorksheet(items[position])
         }
 
         // Get references to the buttons from the included layout using binding

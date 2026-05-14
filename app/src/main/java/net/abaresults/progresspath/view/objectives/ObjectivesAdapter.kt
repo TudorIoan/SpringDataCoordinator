@@ -25,7 +25,7 @@ class ObjectivesAdapter(
     val onItemRemove: (KidObjective) -> Unit
 ) : RecyclerView.Adapter<ObjectivesAdapter.BaseViewHolder<*>>() {
 
-    var userType = UserType.THERAPIST
+    var userType = UserType.COORDINATOR
 
     private var items: List<ObjectivesListItem> = emptyList()
 

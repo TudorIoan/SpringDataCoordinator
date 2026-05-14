@@ -1,8 +1,6 @@
 package net.abaresults.progresspath.view.kids
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.FileProvider
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -27,9 +24,6 @@ import net.abaresults.progresspath.R
 import net.abaresults.progresspath.databinding.FragmentKidsBinding
 import net.abaresults.progresspath.model.Kid
 import net.abaresults.progresspath.model.UserType
-import net.abaresults.progresspath.view.objectives.ObjectivesAction
-import java.io.File
-import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class KidsFragment : BaseFragment() {
@@ -71,8 +65,6 @@ class KidsFragment : BaseFragment() {
                 is KidsState.Idle -> {}
                 is KidsState.ContentLoaded -> handleContentLoaded(it.items, it.userType)
                 is KidsState.GoToObjectives -> navigateToObjectives()
-                is KidsState.GoToReport -> handleGoToReport(it.pdfData)
-                is KidsState.InsufficientActiveItems -> showInsufficientActiveItemsDialog(it.objectiveNames)
             }
         }
         viewModel.state.observe(viewLifecycleOwner, stateObserver)
@@ -100,10 +92,7 @@ class KidsFragment : BaseFragment() {
             },
             onItemRemove = { kid ->
                 showRemoveDialog(kid)
-            },
-            onGenerateKidWorksheet = {
-                viewModel.takeAction(KidsAction.GenerateKidWorksheet(it))
-            },
+            }
         )
 
         binding.kidsRecyclerView.apply {
@@ -128,27 +117,12 @@ class KidsFragment : BaseFragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.clinics_toolbar_menu, menu)
 
-                val coordinatorItem = menu.findItem(R.id.action_coordinator)
                 val therapistsItem = menu.findItem(R.id.action_therapists)
-
-                when (userType) {
-                    UserType.COORDINATOR -> {
-                        coordinatorItem?.isVisible = false
-                        therapistsItem?.isVisible = true
-                    }
-                    UserType.THERAPIST -> {
-                        coordinatorItem?.isVisible = true
-                        therapistsItem?.isVisible = false
-                    }
-                }
+                therapistsItem?.isVisible = true
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.action_coordinator -> {
-                        findNavController().navigate(R.id.coordinatorFragment)
-                        true
-                    }
                     R.id.action_therapists -> {
                         findNavController().navigate(R.id.therapistsFragment)
                         true
@@ -166,44 +140,6 @@ class KidsFragment : BaseFragment() {
 
     private fun navigateToObjectives() {
         findNavController().navigate(R.id.objectivesFragment)
-    }
-
-    private fun handleGoToReport(pdfData: ByteArray) {
-        try {
-            val pdfFile = savePdfToFile(pdfData)
-            openPdfWithExternalApp(pdfFile)
-        } catch (e: Exception) {
-            Log.e("KidsFragment", "Error handling PDF", e)
-            showError("Error displaying PDF: ${e.message}")
-        }
-    }
-
-    private fun savePdfToFile(pdfData: ByteArray): File {
-        val file = File(requireContext().cacheDir, "kid_worksheet.pdf")
-        FileOutputStream(file).use { output ->
-            output.write(pdfData)
-        }
-        return file
-    }
-
-    private fun openPdfWithExternalApp(pdfFile: File) {
-        try {
-            val uri = FileProvider.getUriForFile(
-                requireContext(),
-                "${requireContext().packageName}.fileprovider",
-                pdfFile
-            )
-
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, "application/pdf")
-                flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_GRANT_READ_URI_PERMISSION
-            }
-
-            startActivity(intent)
-        } catch (e: Exception) {
-            Log.e("KidsFragment", "Error opening PDF", e)
-            showError("No PDF viewer available. Please install a PDF reader app.")
-        }
     }
 
     private fun showLoading() = binding.loadingViewInclude.loadingView.apply { visibility = View.VISIBLE }
@@ -229,15 +165,6 @@ class KidsFragment : BaseFragment() {
                 }
             }
             .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun showInsufficientActiveItemsDialog(objectiveNames: List<String>) {
-        val list = objectiveNames.joinToString("\n") { "• $it" }
-        AlertDialog.Builder(requireContext())
-            .setTitle("Insufficient Active Items")
-            .setMessage("These objectives have less than 4 active items. Please add more:\n\n$list")
-            .setPositiveButton("OK", null)
             .show()
     }
 

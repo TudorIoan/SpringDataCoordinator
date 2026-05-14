@@ -42,16 +42,11 @@ class ClinicsViewModel @Inject constructor(
     }
 
     private fun handleStart() {
-        _userType.value = UserType.fromString(userRepo.requireUserDetails().userType)
+        _userType.value = UserType.COORDINATOR
 
         update(ClinicsState.Loading)
         viewModelScope.launch {
-            val result = when (UserType.fromString(userRepo.requireUserDetails().userType)) {
-                UserType.COORDINATOR ->
-                    clinicsRepo.fetchAllClinicsCreatedByCurrentUser()
-                UserType.THERAPIST ->
-                    clinicsRepo.fetchAllClinicsWithCurrentTherapist()
-            }
+            val result = clinicsRepo.fetchAllClinicsCreatedByCurrentUser()
 
             result.onSuccess {
                 clinicsList.clear()

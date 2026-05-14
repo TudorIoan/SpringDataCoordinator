@@ -16,7 +16,6 @@ import net.abaresults.progresspath.repo.KidObjectiveRepository
 import net.abaresults.progresspath.repo.ObjectiveRepository
 import net.abaresults.progresspath.repo.OrgRepository
 import net.abaresults.progresspath.repo.UserRepository
-import net.abaresults.progresspath.util.isItemAvailableForTherapist
 import net.abaresults.progresspath.view.items.ItemState.Idle
 import java.util.Date
 import javax.inject.Inject
@@ -67,23 +66,14 @@ class ItemsViewModel @Inject constructor(
     private fun handleStart() {
         _title.value =
             "${orgRepo.requireSelectedClinic().name} > ${orgRepo.requireSelectedKid().name} > ${orgRepo.requireSelectedObjective().name}"
-        _userType.value = UserType.fromString(userRepo.requireUserDetails().userType)
+        _userType.value = UserType.COORDINATOR
 
         updateItems()
     }
 
     private fun updateItems() {
 
-        // Filter items for therapists (if an item has been answered today by current therapist - do not show it)
-        val filteredItems = if (userType.value == UserType.COORDINATOR) {
-            orgRepo.requireSelectedKidObjective().itemsList
-        } else {
-            // For therapists, filter to only show items available for them to work on today
-            val currentUserId = userRepo.requireUserDetails().ownerUid
-            orgRepo.requireSelectedKidObjective().itemsList.filter { item ->
-                isItemAvailableForTherapist(item, currentUserId)
-            }
-        }
+        val filteredItems = orgRepo.requireSelectedKidObjective().itemsList
 
 
         items = filteredItems.sortedWith(compareBy {

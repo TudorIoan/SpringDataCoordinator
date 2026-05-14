@@ -91,12 +91,6 @@
         tools:layout="@layout/fragment_add_therapist" />
 
     <fragment
-        android:id="@+id/coordinatorFragment"
-        android:name="net.abaresults.progresspath.view.coordinator.CoordinatorFragment"
-        android:label="Coordinator"
-        tools:layout="@layout/fragment_coordinator" />
-
-    <fragment
         android:id="@+id/reportFragment"
         android:name="net.abaresults.progresspath.view.report.ReportFragment"
         android:label="Report"

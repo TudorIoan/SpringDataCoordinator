@@ -7,5 +7,4 @@ sealed class KidsAction {
     class KidClicked (val kid: Kid): KidsAction()
     class RemoveKid(val kid: Kid): KidsAction()
     class UpdateKidName(val kid: Kid): KidsAction()
-    class GenerateKidWorksheet(val kid: Kid): KidsAction()
 }

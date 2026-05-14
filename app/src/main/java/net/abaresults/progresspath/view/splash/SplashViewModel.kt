@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import net.abaresults.progresspath.model.UserType
 import net.abaresults.progresspath.repo.UserRepository
 import javax.inject.Inject
 
@@ -30,6 +31,9 @@ class SplashViewModel @Inject constructor(val userRepo: UserRepository) : ViewMo
         update(SplashState.Loading)
         viewModelScope.launch {
             userRepo.autoLogIn()
+            if (userRepo.isLoggedIn() && UserType.fromString(userRepo.requireUserDetails().userType) != UserType.COORDINATOR) {
+                userRepo.logout()
+            }
             update(SplashState.ContentLoaded)
         }
     }

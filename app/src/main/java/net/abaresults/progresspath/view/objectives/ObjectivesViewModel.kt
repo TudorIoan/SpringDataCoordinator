@@ -26,7 +26,6 @@ import net.abaresults.progresspath.repo.KidObjectiveRepository
 import net.abaresults.progresspath.repo.ObjectiveRepository
 import net.abaresults.progresspath.repo.OrgRepository
 import net.abaresults.progresspath.repo.UserRepository
-import net.abaresults.progresspath.util.isItemAvailableForTherapist
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -71,7 +70,7 @@ class ObjectivesViewModel @Inject constructor(
 
     private fun handleStart() {
         _title.value = "${orgRepo.requireSelectedClinic().name} > ${orgRepo.requireSelectedKid().name}"
-        _userType.value = UserType.fromString(userRepo.requireUserDetails().userType)
+        _userType.value = UserType.COORDINATOR
 
         // Set selected kid to reset selected Objective
         orgRepo.setSelectedKid(orgRepo.requireSelectedKid())
@@ -83,35 +82,14 @@ class ObjectivesViewModel @Inject constructor(
         objectivesListItems.clear()
 
         viewModelScope.launch {
-            val userType = UserType.fromString(userRepo.requireUserDetails().userType)
             val kidId = orgRepo.requireSelectedKid().id
             
-            Log.d("ObjectivesViewModel", "User type: $userType, Kid ID: $kidId")
+            Log.d("ObjectivesViewModel", "Coordinator objective load for kid ID: $kidId")
             
-            // Get kid objectives based on user type
-            val kidObjectivesResult = if (userType == UserType.THERAPIST) {
-                Log.d("ObjectivesViewModel", "Fetching active objectives for therapist")
-                kidObjectiveRepo.getActiveKidObjectives(kidId)
-            } else {
-                Log.d("ObjectivesViewModel", "Fetching all objectives for coordinator")
-                kidObjectiveRepo.getKidObjectives(kidId)
-            }
+            val kidObjectivesResult = kidObjectiveRepo.getKidObjectives(kidId)
             
             kidObjectivesResult.onSuccess { kidObjectivesList ->
-
-                // For therapists filter all kidObjectives that have items available for them to work on today
-                val filteredKidObjectives = if (userType == UserType.THERAPIST) {
-                    val currentUserId = userRepo.requireUserDetails().ownerUid
-                    kidObjectivesList.filter { kidObjective ->
-                        kidObjective.itemsList.any { item ->
-                            isItemAvailableForTherapist(item, currentUserId)
-                        }
-                    }.also { filtered ->
-                        Log.d("ObjectivesViewModel", "Filtered ${kidObjectivesList.size} to ${filtered.size} objectives for therapist")
-                    }
-                } else {
-                    kidObjectivesList
-                }
+                val filteredKidObjectives = kidObjectivesList
 
                 Log.d("ObjectivesViewModel", "Found ${filteredKidObjectives.size} kid objectives")
                 kidObjectives.addAll(filteredKidObjectives)
@@ -173,13 +151,6 @@ class ObjectivesViewModel @Inject constructor(
 
     private fun handleToggleObjectiveActive(kidObjective: KidObjective, isActive: Boolean) {
         viewModelScope.launch {
-            val userType = UserType.fromString(userRepo.requireUserDetails().userType)
-            if (userType != UserType.COORDINATOR) {
-                return@launch
-            }
-
-            val kidId = orgRepo.requireSelectedKid().id
-            
             // Update existing kid objective
             val updatedKidObjective = kidObjective.copy(active = isActive)
             val result = kidObjectiveRepo.updateKidObjective(updatedKidObjective)

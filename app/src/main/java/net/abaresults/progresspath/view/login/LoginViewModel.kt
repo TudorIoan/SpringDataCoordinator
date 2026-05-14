@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import net.abaresults.progresspath.model.UserType
 import net.abaresults.progresspath.repo.UserRepository
 import javax.inject.Inject
 
@@ -37,7 +38,15 @@ class LoginViewModel @Inject constructor(
             update(LoginState.Loading)
             viewModelScope.launch {
                 userRepo.login(email, password)
-                    .onSuccess { update(LoginState.LoginSuccess) }
+                    .onSuccess {
+                        val userType = UserType.fromString(userRepo.requireUserDetails().userType)
+                        if (userType == UserType.COORDINATOR) {
+                            update(LoginState.LoginSuccess)
+                        } else {
+                            userRepo.logout()
+                            update(LoginState.Error("This account is for SpringData Therapist. Please use the SpringData Therapist app.", "", ""))
+                        }
+                    }
                     .onFailure { update(LoginState.Error(it.message ?: "Unknown error", "", "")) }
             }
         }
