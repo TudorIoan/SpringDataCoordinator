@@ -1,2 +1,2 @@
-# ProgressPath
-Track the progress of your ABA patients.
+# SpringData Coordinator
+Coordinate the progress of your ABA patients.
