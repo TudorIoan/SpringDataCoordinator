@@ -7,6 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,6 +22,7 @@ import net.abaresults.progresspath.BaseFragment
 import net.abaresults.progresspath.R
 import net.abaresults.progresspath.databinding.FragmentAddObjectiveBinding
 import net.abaresults.progresspath.model.ObjLevel
+import net.abaresults.progresspath.model.Objective
 import net.abaresults.progresspath.model.ObjectiveType
 
 @AndroidEntryPoint
@@ -83,7 +89,7 @@ class AddObjectiveFragment : BaseFragment() {
 
         // Setup RecyclerView for available objectives
         availableObjectivesAdapter = AvailableObjectivesAdapter { objective ->
-            viewModel.takeAction(AddObjectiveAction.ObjectiveSelected(objective))
+            showMasteryCriteriaDialog(objective)
         }
 
         binding.availableObjectivesRecyclerView.apply {
@@ -111,6 +117,71 @@ class AddObjectiveFragment : BaseFragment() {
     private fun showError(generalError: String) {
         binding.errorTextView.text = generalError
         binding.errorTextView.visibility = View.VISIBLE
+    }
+
+    private fun showMasteryCriteriaDialog(objective: Objective) {
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 20, 48, 0)
+        }
+        val coordinatorRadio = RadioButton(requireContext()).apply {
+            text = "Coordinator decides"
+            isChecked = true
+        }
+        val consecutiveRadio = RadioButton(requireContext()).apply {
+            text = ""
+        }
+        val countEditText = EditText(requireContext()).apply {
+            setText("3")
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            isEnabled = false
+            minEms = 2
+        }
+        val consecutiveRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            addView(consecutiveRadio)
+            addView(countEditText, LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(TextView(requireContext()).apply {
+                text = " consecutive Yes"
+                setPadding(12, 0, 0, 0)
+            })
+        }
+
+        fun selectCoordinator() {
+            coordinatorRadio.isChecked = true
+            consecutiveRadio.isChecked = false
+            countEditText.isEnabled = false
+        }
+
+        fun selectConsecutive() {
+            coordinatorRadio.isChecked = false
+            consecutiveRadio.isChecked = true
+            countEditText.isEnabled = true
+            countEditText.requestFocus()
+        }
+
+        coordinatorRadio.setOnClickListener { selectCoordinator() }
+        consecutiveRadio.setOnClickListener { selectConsecutive() }
+        consecutiveRow.setOnClickListener { selectConsecutive() }
+
+        container.addView(coordinatorRadio)
+        container.addView(consecutiveRow)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Mastery Criteria")
+            .setMessage("Choose how mastery should be decided for '${objective.name}'.")
+            .setView(container)
+            .setPositiveButton("Add Objective") { _, _ ->
+                val consecutiveYesses = if (consecutiveRadio.isChecked) {
+                    countEditText.text.toString().toIntOrNull()?.coerceIn(1, 20) ?: 3
+                } else {
+                    null
+                }
+                viewModel.takeAction(AddObjectiveAction.ObjectiveSelected(objective, consecutiveYesses))
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun navigateBack() {

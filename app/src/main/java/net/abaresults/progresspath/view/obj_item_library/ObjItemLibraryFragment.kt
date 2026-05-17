@@ -123,58 +123,14 @@ class ObjItemLibraryFragment : BaseFragment() {
         dialogBinding.itemTypeTextView.setAdapter(adapter)
         dialogBinding.itemTypeTextView.setText(item.type.displayName, false)
 
-        // Mastery criteria - show if Yes/No
-        val isYesNo = item.type == ObjItemType.YES_NO
-        dialogBinding.masteryCriteriaSection.visibility = if (isYesNo) View.VISIBLE else View.GONE
-
-        // Pre-populate mastery criteria from existing item
-        if (item.consecutiveYesses != null) {
-            dialogBinding.radioConsecutive.isChecked = true
-            dialogBinding.radioCoordinator.isChecked = false
-            dialogBinding.consecutiveCountEditText.isEnabled = true
-            dialogBinding.consecutiveCountEditText.setText(item.consecutiveYesses.toString())
-        }
-
-        // Show/hide mastery criteria when item type changes
-        dialogBinding.itemTypeTextView.setOnItemClickListener { _, _, position, _ ->
-            val selectedIsYesNo = ObjItemType.values()[position] == ObjItemType.YES_NO
-            dialogBinding.masteryCriteriaSection.visibility = if (selectedIsYesNo) View.VISIBLE else View.GONE
-            if (!selectedIsYesNo) {
-                dialogBinding.radioCoordinator.isChecked = true
-                dialogBinding.radioConsecutive.isChecked = false
-                dialogBinding.consecutiveCountEditText.isEnabled = false
-                dialogBinding.consecutiveCountEditText.setText("3")
-            }
-        }
-
-        // Radio button mutual exclusivity
-        dialogBinding.radioCoordinator.setOnClickListener {
-            dialogBinding.radioConsecutive.isChecked = false
-            dialogBinding.consecutiveCountEditText.isEnabled = false
-        }
-        dialogBinding.radioConsecutive.setOnClickListener {
-            dialogBinding.radioCoordinator.isChecked = false
-            dialogBinding.consecutiveCountEditText.isEnabled = true
-        }
-        dialogBinding.radioConsecutiveRow.setOnClickListener {
-            dialogBinding.radioConsecutive.isChecked = true
-            dialogBinding.radioCoordinator.isChecked = false
-            dialogBinding.consecutiveCountEditText.isEnabled = true
-        }
-
         AlertDialog.Builder(requireContext())
             .setTitle("Edit Item")
             .setView(dialogBinding.root)
             .setPositiveButton("Save") { _, _ ->
                 val newName = dialogBinding.itemNameEditText.text.toString().trim()
                 val newType = ObjItemType.fromDisplayName(dialogBinding.itemTypeTextView.text.toString())
-                val consecutiveYesses: Int? = if (newType == ObjItemType.YES_NO && dialogBinding.radioConsecutive.isChecked) {
-                    dialogBinding.consecutiveCountEditText.text.toString().toIntOrNull()?.coerceIn(1, 20) ?: 3
-                } else {
-                    null
-                }
                 if (newName.isNotEmpty()) {
-                    val updatedItem = item.copy(name = newName, type = newType, consecutiveYesses = consecutiveYesses)
+                    val updatedItem = item.copy(name = newName, type = newType)
                     viewModel.takeAction(ObjItemLibraryAction.UpdateItem(updatedItem))
                 }
             }

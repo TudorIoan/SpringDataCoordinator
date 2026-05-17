@@ -102,7 +102,7 @@ class ItemsViewModel @Inject constructor(
     private fun handleYesClicked(item: KidObjectiveItem) {
         update(ItemState.Loading)
         item.yesNoList.add(YesNoItem(yes = true, date = Date()))
-        val consecutiveYesses = item.objItem.consecutiveYesses
+        val consecutiveYesses = orgRepo.requireSelectedKidObjective().consecutiveYesses
         if (consecutiveYesses != null) {
             val recentEntries = item.yesNoList.takeLast(consecutiveYesses)
             if (recentEntries.size >= consecutiveYesses && recentEntries.all { it.yes }) {

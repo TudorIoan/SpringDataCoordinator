@@ -40,7 +40,7 @@ class AddObjectiveViewModel @Inject constructor(
             is AddObjectiveAction.Start -> handleStart()
             is AddObjectiveAction.ObjLevelChanged -> handleObjLevelChanged(action.level)
             is AddObjectiveAction.ObjectiveTypeChanged -> handleObjectiveTypeChanged(action.objectiveType)
-            is AddObjectiveAction.ObjectiveSelected -> handleObjectiveSelected(action.objective)
+            is AddObjectiveAction.ObjectiveSelected -> handleObjectiveSelected(action.objective, action.consecutiveYesses)
         }
     }
 
@@ -100,13 +100,13 @@ class AddObjectiveViewModel @Inject constructor(
         }
     }
 
-    private fun handleObjectiveSelected(objective: Objective) {
+    private fun handleObjectiveSelected(objective: Objective, consecutiveYesses: Int?) {
         viewModelScope.launch {
             try {
                 update(AddObjectiveState.Loading)
                 
                 val kidId = orgRepo.requireSelectedKid().id
-                val result = kidObjectiveRepo.addKidObjective(kidId, objective, false)
+                val result = kidObjectiveRepo.addKidObjective(kidId, objective, false, consecutiveYesses)
                 
                 result.fold(
                     onSuccess = {

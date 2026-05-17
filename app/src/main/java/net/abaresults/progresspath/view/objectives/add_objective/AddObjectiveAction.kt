@@ -8,5 +8,5 @@ sealed class AddObjectiveAction {
     object Start : AddObjectiveAction()
     class ObjLevelChanged(val level: ObjLevel) : AddObjectiveAction()
     class ObjectiveTypeChanged(val objectiveType: ObjectiveType) : AddObjectiveAction()
-    class ObjectiveSelected(val objective: Objective) : AddObjectiveAction()
+    class ObjectiveSelected(val objective: Objective, val consecutiveYesses: Int?) : AddObjectiveAction()
 }

@@ -17,7 +17,7 @@ class KidObjectiveRepository @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    suspend fun addKidObjective(kidId: String, objective: Objective, isActive: Boolean = false): Result<String> {
+    suspend fun addKidObjective(kidId: String, objective: Objective, isActive: Boolean = false, consecutiveYesses: Int? = null): Result<String> {
         val currentUser = firebaseAuth.currentUser
             ?: return Result.failure(Exception("User not authenticated"))
 
@@ -45,6 +45,7 @@ class KidObjectiveRepository @Inject constructor(
                 itemsList = objective.itemsList.map { objItem -> KidObjectiveItem(objItem) },
                 objectiveId = objective.id,
                 active = isActive,
+                consecutiveYesses = consecutiveYesses,
                 addedByUid = currentUser.uid
             )
 
@@ -156,14 +157,14 @@ class KidObjectiveRepository @Inject constructor(
 
             // Update each KidObjective with newly added items
             for (kidObjective in kidObjectives) {
-                val existingItemKeys = kidObjective.itemsList.map { Triple(it.objItem.normalizedName, it.objItem.type, it.objItem.consecutiveYesses) }.toSet()
-                val newObjectiveItemKeys = objective.itemsList.map { Triple(it.normalizedName, it.type, it.consecutiveYesses) }.toSet()
+                val existingItemKeys = kidObjective.itemsList.map { it.objItem.normalizedName to it.objItem.type }.toSet()
+                val newObjectiveItemKeys = objective.itemsList.map { it.normalizedName to it.type }.toSet()
 
                 val updatedItemsList = kidObjective.itemsList.toMutableList()
 
-                // Add new items from objective that don't exist in kidObjective (matched by name + type + consecutiveYesses)
+                // Add new items from objective that don't exist in kidObjective (matched by name + type)
                 for (objItem in objective.itemsList) {
-                    val key = Triple(objItem.normalizedName, objItem.type, objItem.consecutiveYesses)
+                    val key = objItem.normalizedName to objItem.type
                     if (!existingItemKeys.contains(key)) {
                         val newKidObjectiveItem = KidObjectiveItem(
                             objItem = objItem,
@@ -175,12 +176,12 @@ class KidObjectiveRepository @Inject constructor(
                     }
                 }
 
-                // Remove items from kidObjective that are no longer in updated objective (matched by name + type + consecutiveYesses)
+                // Remove items from kidObjective that are no longer in updated objective (matched by name + type)
                 for (kidObjItem in kidObjective.itemsList) {
-                    val key = Triple(kidObjItem.objItem.normalizedName, kidObjItem.objItem.type, kidObjItem.objItem.consecutiveYesses)
+                    val key = kidObjItem.objItem.normalizedName to kidObjItem.objItem.type
                     if (!newObjectiveItemKeys.contains(key)) {
                         updatedItemsList.removeIf {
-                            Triple(it.objItem.normalizedName, it.objItem.type, it.objItem.consecutiveYesses) == key
+                            it.objItem.normalizedName to it.objItem.type == key
                         }
                     }
                 }

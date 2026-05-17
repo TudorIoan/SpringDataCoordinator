@@ -23,7 +23,7 @@ class AddObjItemViewModel @Inject constructor(
 
     fun takeAction(action: AddObjItemAction) {
         when (action) {
-            is AddObjItemAction.AddItemClicked -> handleAddItem(action.itemName, action.itemType, action.consecutiveYesses)
+            is AddObjItemAction.AddItemClicked -> handleAddItem(action.itemName, action.itemType)
         }
     }
 
@@ -31,12 +31,12 @@ class AddObjItemViewModel @Inject constructor(
         _state.postValue(newState)
     }
 
-    private fun handleAddItem(itemName: String, itemType: ObjItemType, consecutiveYesses: Int?) {
+    private fun handleAddItem(itemName: String, itemType: ObjItemType) {
         update(AddObjItemState.Loading)
             if (orgRepo.requireSelectedObjective().itemsList.any { it.normalizedName == itemName.trim().lowercase() }) {
                 update(AddObjItemState.Error("Item already exists"))
             } else {
-                val newItem = ObjItem(itemName.trim(), itemName.trim().lowercase(), itemType, consecutiveYesses)
+                val newItem = ObjItem(itemName.trim(), itemName.trim().lowercase(), itemType)
                 val updatedItemsList = orgRepo.requireSelectedObjective().itemsList.toMutableList().apply { add(newItem) }
                 val updatedObjective = orgRepo.requireSelectedObjective().copy(itemsList = updatedItemsList)
 

@@ -3,8 +3,7 @@ package net.abaresults.progresspath.model
 data class ObjItem(
     val name: String = "",
     val normalizedName: String = "",
-    val type: ObjItemType = ObjItemType.YES_NO,
-    val consecutiveYesses: Int? = null // null = coordinator decides, 1-20 = consecutive Yes count for mastery
+    val type: ObjItemType = ObjItemType.YES_NO
 )
 
 enum class ObjItemType(val displayName: String) {

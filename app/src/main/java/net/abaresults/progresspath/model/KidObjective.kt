@@ -8,6 +8,7 @@ data class KidObjective(
     val kidId: String = "",
     val objectiveId: String = "",
     val active: Boolean = false,
+    val consecutiveYesses: Int? = null,
     val addedByUid: String = "", // Coordinator who added this objective to the kid
     val itemsList: List<KidObjectiveItem> = listOf(),
     @ServerTimestamp

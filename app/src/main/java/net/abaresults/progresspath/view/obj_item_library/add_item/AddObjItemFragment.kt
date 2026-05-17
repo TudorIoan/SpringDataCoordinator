@@ -64,49 +64,12 @@ class AddObjItemFragment : BaseFragment() {
         binding.itemTypeTextView.setAdapter(adapter)
         binding.itemTypeTextView.setText(itemTypes[0], false)
 
-        // Show mastery criteria section by default since Yes/No is the default type
-        binding.masteryCriteriaSection.visibility = View.VISIBLE
-
-        // Show/hide mastery criteria section when item type changes
-        binding.itemTypeTextView.setOnItemClickListener { _, _, position, _ ->
-            val isYesNo = ObjItemType.values()[position] == ObjItemType.YES_NO
-            binding.masteryCriteriaSection.visibility = if (isYesNo) View.VISIBLE else View.GONE
-            if (!isYesNo) resetMasteryCriteria()
-        }
-
-        // Radio button mutual exclusivity
-        binding.radioCoordinator.setOnClickListener {
-            binding.radioConsecutive.isChecked = false
-            binding.consecutiveCountEditText.isEnabled = false
-        }
-        binding.radioConsecutive.setOnClickListener {
-            binding.radioCoordinator.isChecked = false
-            binding.consecutiveCountEditText.isEnabled = true
-        }
-        binding.radioConsecutiveRow.setOnClickListener {
-            binding.radioConsecutive.isChecked = true
-            binding.radioCoordinator.isChecked = false
-            binding.consecutiveCountEditText.isEnabled = true
-        }
-
         binding.addItemButton.setOnClickListener {
             val itemName = binding.itemNameEditText.text.toString()
             val itemTypeStr = binding.itemTypeTextView.text.toString()
             val itemType = ObjItemType.fromDisplayName(itemTypeStr)
-            val consecutiveYesses: Int? = if (itemType == ObjItemType.YES_NO && binding.radioConsecutive.isChecked) {
-                binding.consecutiveCountEditText.text.toString().toIntOrNull()?.coerceIn(1, 20) ?: 3
-            } else {
-                null
-            }
-            viewModel.takeAction(AddObjItemAction.AddItemClicked(itemName, itemType, consecutiveYesses))
+            viewModel.takeAction(AddObjItemAction.AddItemClicked(itemName, itemType))
         }
-    }
-
-    private fun resetMasteryCriteria() {
-        binding.radioCoordinator.isChecked = true
-        binding.radioConsecutive.isChecked = false
-        binding.consecutiveCountEditText.isEnabled = false
-        binding.consecutiveCountEditText.setText("3")
     }
 
     private fun showError(generalError: String) {
