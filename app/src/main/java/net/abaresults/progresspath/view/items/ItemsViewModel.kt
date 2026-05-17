@@ -174,6 +174,12 @@ class ItemsViewModel @Inject constructor(
     private fun handleSetMastered(item: KidObjectiveItem) {
         update(ItemState.Loading)
         item.mastered = !item.mastered
+
+        if (item.mastered) {
+            item.lastResponseTime = Date()
+            item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
+        }
+
         viewModelScope.launch {
             val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
             result.onSuccess {

@@ -276,14 +276,19 @@ class ObjectivesViewModel @Inject constructor(
         table.addHeaderCell(Cell().add(Paragraph("Mastered on").setFont(boldFont).setFontSize(12f)))
 
         // Add data rows
-        kidObjective.itemsList.filter { it.objItem.type == ObjItemType.YES_NO }.forEachIndexed { index, item ->
+        kidObjective.itemsList.forEachIndexed { index, item ->
             val itemNumber = (index + 1).toString()
             val itemName = item.objItem.name
             val firstResponseText = item.firstResponseTime?.let { dateFormat.format(it) } ?: "Not started"
-            val masteredText = if (item.mastered) {
-                item.lastResponseTime?.let { dateFormat.format(it) } ?: "Not started"
+            var masteredText = if (item.mastered) {
+                item.lastResponseTime?.let { dateFormat.format(it) } ?: "by me"
             } else {
                 "Not mastered"
+            }
+
+            // Mark items mastered by coordinator
+            if (item.mastered && item.lastModificationByUserId == userRepo.requireUserDetails().ownerUid) {
+                masteredText += " (by me)"
             }
 
             // Determine font style based on mastered status
