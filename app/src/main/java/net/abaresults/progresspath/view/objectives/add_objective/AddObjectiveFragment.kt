@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import net.abaresults.progresspath.BaseFragment
 import net.abaresults.progresspath.R
 import net.abaresults.progresspath.databinding.FragmentAddObjectiveBinding
+import net.abaresults.progresspath.model.ObjItemType
 import net.abaresults.progresspath.model.ObjLevel
 import net.abaresults.progresspath.model.Objective
 import net.abaresults.progresspath.model.ObjectiveType
@@ -89,7 +90,11 @@ class AddObjectiveFragment : BaseFragment() {
 
         // Setup RecyclerView for available objectives
         availableObjectivesAdapter = AvailableObjectivesAdapter { objective ->
-            showMasteryCriteriaDialog(objective)
+            if (objective.hasOnlyYesNoItems()) {
+                showMasteryCriteriaDialog(objective)
+            } else {
+                viewModel.takeAction(AddObjectiveAction.ObjectiveSelected(objective, null))
+            }
         }
 
         binding.availableObjectivesRecyclerView.apply {
@@ -182,6 +187,10 @@ class AddObjectiveFragment : BaseFragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun Objective.hasOnlyYesNoItems(): Boolean {
+        return itemsList.isNotEmpty() && itemsList.all { it.type == ObjItemType.YES_NO }
     }
 
     private fun navigateBack() {
