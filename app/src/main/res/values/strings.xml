@@ -8,10 +8,6 @@
     <string name="loading_please_wait">Loading, please wait…</string>
     <string name="msg_invalid_number_selected">You must enter a valid integer</string>
 
-    <string name="register_user_type_therapist_label">I\'m a Therapist</string>
-    <string name="register_user_type_coordinator_label">I\'m a Coordinator</string>
-    <string name="register_invited_therapist">You are a Therapist, invited by &lt;b&gt;%s&lt;/b&gt;</string>
-
     <string name="item_last_answer">Last Answer: &lt;b&gt;%s&lt;/b&gt; on &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="item_by_therapist">By therapist: &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="objective_was_created">Objective %1$s was created.</string>

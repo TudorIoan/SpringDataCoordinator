@@ -1,4 +1,4 @@
-package net.abaresults.progresspath.view.splash
+package app.springdata.coordinator.view.splash
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule

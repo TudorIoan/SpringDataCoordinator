@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:770818568477:android:3944c144b2f65b5841b1f4",
         "android_client_info": {
-          "package_name": "net.abaresults.progresspath"
+          "package_name": "app.springdata.coordinator"
         }
       },
       "oauth_client": [],

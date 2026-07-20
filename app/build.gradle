@@ -9,15 +9,14 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
 android {
     compileSdk rootProject.targetSdkVersion
-    namespace = "net.abaresults.progresspath"
+    namespace = "app.springdata.coordinator"
     defaultConfig {
-        applicationId "net.abaresults.progresspath"
+        applicationId "app.springdata.coordinator"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx. n test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "SPRINGDATA_APP_ROLE", "\"coordinator\"")
     }
 
     signingConfigs {
