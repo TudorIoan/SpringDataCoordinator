@@ -184,7 +184,7 @@ class ObjectivesFragment : BaseFragment() {
             setPadding(0, 28, 0, 8)
         })
 
-        if (!kidObjective.hasOnlyYesNoItems()) {
+        if (!kidObjective.hasAnyYesNoItems()) {
             container.addView(TextView(requireContext()).apply {
                 text = "Not applicable"
             })
@@ -257,8 +257,8 @@ class ObjectivesFragment : BaseFragment() {
             .show()
     }
 
-    private fun KidObjective.hasOnlyYesNoItems(): Boolean {
-        return itemsList.isNotEmpty() && itemsList.all { it.objItem.type == ObjItemType.YES_NO }
+    private fun KidObjective.hasAnyYesNoItems(): Boolean {
+        return itemsList.any { it.objItem.type == ObjItemType.YES_NO }
     }
 
     private fun navigateToReport(pdfByteArray: ByteArray) {

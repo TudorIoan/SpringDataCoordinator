@@ -202,7 +202,7 @@ class ObjectivesViewModel @Inject constructor(
         if (consecutiveYesses == null) return this
 
         return map { item ->
-            if (item.mastered) {
+            if (item.mastered || item.objItem.type != ObjItemType.YES_NO) {
                 item
             } else {
                 val recentEntries = item.yesNoList.takeLast(consecutiveYesses)

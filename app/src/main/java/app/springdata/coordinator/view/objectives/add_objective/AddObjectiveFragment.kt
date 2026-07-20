@@ -90,7 +90,7 @@ class AddObjectiveFragment : BaseFragment() {
 
         // Setup RecyclerView for available objectives
         availableObjectivesAdapter = AvailableObjectivesAdapter { objective ->
-            if (objective.hasOnlyYesNoItems()) {
+            if (objective.hasAnyYesNoItems()) {
                 showMasteryCriteriaDialog(objective)
             } else {
                 viewModel.takeAction(AddObjectiveAction.ObjectiveSelected(objective, null))
@@ -175,7 +175,7 @@ class AddObjectiveFragment : BaseFragment() {
 
         AlertDialog.Builder(requireContext())
             .setTitle("Mastery Criteria")
-            .setMessage("Choose how mastery should be decided for '${objective.name}'.")
+            .setMessage("Choose how mastery should be decided for Yes/No items in '${objective.name}'.")
             .setView(container)
             .setPositiveButton("Add Objective") { _, _ ->
                 val consecutiveYesses = if (consecutiveRadio.isChecked) {
@@ -189,8 +189,8 @@ class AddObjectiveFragment : BaseFragment() {
             .show()
     }
 
-    private fun Objective.hasOnlyYesNoItems(): Boolean {
-        return itemsList.isNotEmpty() && itemsList.all { it.type == ObjItemType.YES_NO }
+    private fun Objective.hasAnyYesNoItems(): Boolean {
+        return itemsList.any { it.type == ObjItemType.YES_NO }
     }
 
     private fun navigateBack() {
