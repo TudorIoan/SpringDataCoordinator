@@ -2,13 +2,19 @@ package net.abaresults.progresspath.view.objectives
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuHost
@@ -24,7 +30,7 @@ import net.abaresults.progresspath.BaseFragment
 import net.abaresults.progresspath.R
 import net.abaresults.progresspath.databinding.FragmentObjectivesBinding
 import net.abaresults.progresspath.model.KidObjective
-import net.abaresults.progresspath.model.UserType
+import net.abaresults.progresspath.model.ObjItemType
 import java.io.File
 import java.io.FileOutputStream
 
@@ -99,10 +105,7 @@ class ObjectivesFragment : BaseFragment() {
             binding.subtitleInclude.subtitleTextView.text = title
         }
 
-        viewModel.userType.observe(viewLifecycleOwner) { userType ->
-            objectivesAdapter.userType = userType
-            binding.fabAddObjective.isVisible = userType == UserType.COORDINATOR
-        }
+        viewModel.userType.observe(viewLifecycleOwner) {}
     }
 
     private fun configureViews() {
@@ -120,6 +123,9 @@ class ObjectivesFragment : BaseFragment() {
             },
             onItemRemove = { kidObjective ->
                 showRemoveDialog(kidObjective)
+            },
+            onItemEdit = { kidObjective, objectiveName ->
+                showEditObjectiveDialog(kidObjective, objectiveName)
             }
         )
 
@@ -131,6 +137,7 @@ class ObjectivesFragment : BaseFragment() {
         binding.fabAddObjective.setOnClickListener {
             findNavController().navigate(R.id.addObjectiveFragment)
         }
+        binding.fabAddObjective.isVisible = true
 
         addMenuButtons()
     }
@@ -161,6 +168,99 @@ class ObjectivesFragment : BaseFragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun showEditObjectiveDialog(kidObjective: KidObjective, objectiveName: String) {
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 20, 48, 0)
+        }
+
+        container.addView(TextView(requireContext()).apply {
+            text = objectiveName
+            textSize = 18f
+        })
+
+        container.addView(TextView(requireContext()).apply {
+            text = "Mastery criteria"
+            setPadding(0, 28, 0, 8)
+        })
+
+        if (!kidObjective.hasOnlyYesNoItems()) {
+            container.addView(TextView(requireContext()).apply {
+                text = "Not applicable"
+            })
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("Edit Objective")
+                .setView(container)
+                .setPositiveButton("OK", null)
+                .show()
+            return
+        }
+
+        val coordinatorRadio = RadioButton(requireContext()).apply {
+            text = "Coordinator decides"
+            isChecked = kidObjective.consecutiveYesses == null
+        }
+        val consecutiveRadio = RadioButton(requireContext()).apply {
+            text = ""
+            isChecked = kidObjective.consecutiveYesses != null
+        }
+        val countEditText = EditText(requireContext()).apply {
+            setText((kidObjective.consecutiveYesses ?: 3).toString())
+            inputType = InputType.TYPE_CLASS_NUMBER
+            isEnabled = kidObjective.consecutiveYesses != null
+            minEms = 2
+        }
+        val consecutiveRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(consecutiveRadio)
+            addView(countEditText, LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(TextView(requireContext()).apply {
+                text = " consecutive Yes"
+                setPadding(12, 0, 0, 0)
+            })
+        }
+
+        fun selectCoordinator() {
+            coordinatorRadio.isChecked = true
+            consecutiveRadio.isChecked = false
+            countEditText.isEnabled = false
+        }
+
+        fun selectConsecutive() {
+            coordinatorRadio.isChecked = false
+            consecutiveRadio.isChecked = true
+            countEditText.isEnabled = true
+            countEditText.requestFocus()
+        }
+
+        coordinatorRadio.setOnClickListener { selectCoordinator() }
+        consecutiveRadio.setOnClickListener { selectConsecutive() }
+        consecutiveRow.setOnClickListener { selectConsecutive() }
+
+        container.addView(coordinatorRadio)
+        container.addView(consecutiveRow)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edit Objective")
+            .setView(container)
+            .setPositiveButton("Save") { _, _ ->
+                val consecutiveYesses = if (consecutiveRadio.isChecked) {
+                    countEditText.text.toString().toIntOrNull()?.coerceIn(1, 20) ?: 3
+                } else {
+                    null
+                }
+                viewModel.takeAction(ObjectivesAction.UpdateMasteryCriteria(kidObjective, consecutiveYesses))
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun KidObjective.hasOnlyYesNoItems(): Boolean {
+        return itemsList.isNotEmpty() && itemsList.all { it.objItem.type == ObjItemType.YES_NO }
     }
 
     private fun navigateToReport(pdfByteArray: ByteArray) {

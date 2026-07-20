@@ -89,9 +89,7 @@ class      ItemsFragment : BaseFragment() {
             binding.subtitleInclude.subtitleTextView.text = title
         }
 
-        viewModel.userType.observe(viewLifecycleOwner) { userType ->
-            itemsAdapter.userType = userType
-        }
+        viewModel.userType.observe(viewLifecycleOwner) {}
     }
 
     private fun configureViews() {
@@ -133,10 +131,9 @@ class      ItemsFragment : BaseFragment() {
     private fun handleContentLoaded(items: List<KidObjectiveItem>) {
         itemsAdapter.updateData(items)
 
-        val isCoordinator = viewModel.userType.value == UserType.COORDINATOR
         val allFrequency = items.isNotEmpty() && items.all { it.objItem.type == ObjItemType.FREQUENCY }
 
-        if (isCoordinator && allFrequency) {
+        if (allFrequency) {
             showChartMenu()
         }
     }

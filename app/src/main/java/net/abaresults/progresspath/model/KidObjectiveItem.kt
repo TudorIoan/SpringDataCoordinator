@@ -1,8 +1,10 @@
 package net.abaresults.progresspath.model
 
 import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.Date
 
+@IgnoreExtraProperties
 data class KidObjectiveItem(
     val objItem: ObjItem = ObjItem(),
     var active: Boolean = false,

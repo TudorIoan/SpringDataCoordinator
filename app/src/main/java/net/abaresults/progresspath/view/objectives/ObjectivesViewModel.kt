@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import net.abaresults.progresspath.model.KidObjective
+import net.abaresults.progresspath.model.KidObjectiveItem
 import net.abaresults.progresspath.model.ObjItemType
 import net.abaresults.progresspath.model.Objective
 import net.abaresults.progresspath.model.UserType
@@ -61,6 +62,7 @@ class ObjectivesViewModel @Inject constructor(
             is ObjectivesAction.ToggleObjectiveActive -> handleToggleObjectiveActive(action.kidObjective, action.isActive)
             is ObjectivesAction.RemoveObjective -> handleRemoveObjective(action.kidObjective)
             is ObjectivesAction.GenerateObjectiveReport -> handleGenerateObjectiveReport(action.kidObjective)
+            is ObjectivesAction.UpdateMasteryCriteria -> handleUpdateMasteryCriteria(action.kidObjective, action.consecutiveYesses)
         }
     }
 
@@ -172,6 +174,49 @@ class ObjectivesViewModel @Inject constructor(
                 update(ObjectivesState.Error(exception.message ?: "Error updating objective"))
             }
 
+        }
+    }
+
+    private fun handleUpdateMasteryCriteria(kidObjective: KidObjective, consecutiveYesses: Int?) {
+        update(ObjectivesState.Loading)
+        viewModelScope.launch {
+            val updatedKidObjective = kidObjective.copy(
+                consecutiveYesses = consecutiveYesses,
+                itemsList = kidObjective.itemsList.updateMasteryForCriteria(consecutiveYesses)
+            )
+            val result = kidObjectiveRepo.updateKidObjective(updatedKidObjective)
+
+            result.onSuccess {
+                val index = kidObjectives.indexOfFirst { it.id == updatedKidObjective.id }
+                if (index != -1) {
+                    kidObjectives[index] = updatedKidObjective
+                }
+
+                updateObjectivesListItemForKidObjective(updatedKidObjective)
+                update(ObjectivesState.ContentLoaded(objectivesListItems))
+            }.onFailure { exception ->
+                Log.e("ObjectivesViewModel", "Error updating mastery criteria", exception)
+                update(ObjectivesState.Error(exception.message ?: "Error updating mastery criteria"))
+            }
+        }
+    }
+
+    private fun List<KidObjectiveItem>.updateMasteryForCriteria(
+        consecutiveYesses: Int?
+    ): List<KidObjectiveItem> {
+        if (consecutiveYesses == null) return this
+
+        return map { item ->
+            if (item.mastered) {
+                item
+            } else {
+                val recentEntries = item.yesNoList.takeLast(consecutiveYesses)
+                if (recentEntries.size >= consecutiveYesses && recentEntries.all { it.yes }) {
+                    item.copy(mastered = true)
+                } else {
+                    item
+                }
+            }
         }
     }
 

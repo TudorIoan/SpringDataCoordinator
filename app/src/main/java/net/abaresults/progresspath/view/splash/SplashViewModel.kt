@@ -6,12 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import net.abaresults.progresspath.BuildConfig
 import net.abaresults.progresspath.model.UserType
+import net.abaresults.progresspath.repo.AppSettingsRepository
 import net.abaresults.progresspath.repo.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(val userRepo: UserRepository) : ViewModel() {
+class SplashViewModel @Inject constructor(
+    private val userRepo: UserRepository,
+    private val appSettingsRepo: AppSettingsRepository
+) : ViewModel() {
 
     private val _state = MutableLiveData<SplashState>()
         .apply { value = SplashState.Idle }
@@ -30,11 +35,25 @@ class SplashViewModel @Inject constructor(val userRepo: UserRepository) : ViewMo
     private fun handleStart() {
         update(SplashState.Loading)
         viewModelScope.launch {
-            userRepo.autoLogIn()
-            if (userRepo.isLoggedIn() && UserType.fromString(userRepo.requireUserDetails().userType) != UserType.COORDINATOR) {
-                userRepo.logout()
-            }
-            update(SplashState.ContentLoaded)
+            appSettingsRepo.fetchAppSettings()
+                .onSuccess { settings ->
+                    if (settings != null && BuildConfig.VERSION_CODE < settings.minAppVersion) {
+                        update(SplashState.UpdateRequired(settings.minAppMessage))
+                    } else {
+                        continueToApp()
+                    }
+                }
+                .onFailure {
+                    update(SplashState.Error(it.message ?: "Unable to check app version."))
+                }
         }
+    }
+
+    private suspend fun continueToApp() {
+        userRepo.autoLogIn()
+        if (userRepo.isLoggedIn() && UserType.fromString(userRepo.requireUserDetails().userType) != UserType.COORDINATOR) {
+            userRepo.logout()
+        }
+        update(SplashState.ContentLoaded)
     }
 }

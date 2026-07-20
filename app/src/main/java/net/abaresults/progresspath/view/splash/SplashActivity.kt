@@ -1,10 +1,15 @@
 package net.abaresults.progresspath.view.splash
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -45,10 +50,40 @@ class SplashActivity: AppCompatActivity() {
                 is SplashState.ContentLoaded -> {
                     navigateToMainScreen()
                 }
+                is SplashState.UpdateRequired -> {
+                    showUpdateRequiredDialog(it.message)
+                }
                 is SplashState.Idle -> {}
             }
         }
         viewModel.state.observe(this, stateObserver)
+    }
+
+    private fun showUpdateRequiredDialog(message: String) {
+        val updateMessage = message.ifBlank { "Please update the app." }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Update Required")
+            .setMessage(updateMessage)
+            .setCancelable(false)
+            .setPositiveButton("Update", null)
+            .show()
+
+        dialog.findViewById<TextView>(android.R.id.message)?.apply {
+            Linkify.addLinks(this, Linkify.WEB_URLS)
+            movementMethod = LinkMovementMethod.getInstance()
+            linksClickable = true
+        }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                openUpdateLink(updateMessage)
+        }
+    }
+
+    private fun openUpdateLink(message: String) {
+        val url = Regex("""https?://\S+""").find(message)?.value ?: return
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
     }
 
     private fun navigateToMainScreen() {

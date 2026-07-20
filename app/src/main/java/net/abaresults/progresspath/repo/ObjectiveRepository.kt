@@ -124,19 +124,27 @@ class ObjectiveRepository @Inject constructor(
     }
 
     suspend fun fetchObjectivesByIds(objectiveIds: List<String>): Result<List<Objective>> {
-        if (objectiveIds.isEmpty()) {
+        val uniqueObjectiveIds = objectiveIds.distinct()
+        if (uniqueObjectiveIds.isEmpty()) {
             return Result.success(emptyList())
         }
 
         return try {
-            val querySnapshot = firestore.collection("objectives")
-                .whereIn(FieldPath.documentId(), objectiveIds)
-                .get()
-                .await()
+            val objectivesById = mutableMapOf<String, Objective>()
+            uniqueObjectiveIds.chunked(30).forEach { chunk ->
+                val querySnapshot = firestore.collection("objectives")
+                    .whereIn(FieldPath.documentId(), chunk)
+                    .get()
+                    .await()
 
-            val objectives = querySnapshot.documents.mapNotNull { document ->
-                document.toObject(Objective::class.java)
+                querySnapshot.documents.mapNotNull { document ->
+                    document.toObject(Objective::class.java)
+                }.forEach { objective ->
+                    objectivesById[objective.id] = objective
+                }
             }
+
+            val objectives = uniqueObjectiveIds.mapNotNull { objectivesById[it] }
             Result.success(objectives)
         } catch (e: Exception) {
             Result.failure(e)

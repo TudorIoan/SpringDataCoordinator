@@ -11,7 +11,6 @@ import net.abaresults.progresspath.databinding.ObjectiveTypeItemBinding
 import net.abaresults.progresspath.model.KidObjective
 import net.abaresults.progresspath.model.ObjLevel
 import net.abaresults.progresspath.model.ObjectiveType
-import net.abaresults.progresspath.model.UserType
 
 sealed class ObjectivesListItem {
     data class ObjectiveTypeItem(val objectiveType: ObjectiveType, val expanded: Boolean = false) : ObjectivesListItem()
@@ -22,10 +21,10 @@ class ObjectivesAdapter(
     val onItemClicked: (ObjectivesListItem) -> Unit,
     val onToggleClicked: (KidObjective, Boolean) -> Unit,
     val onGenerateObjectiveReport: (KidObjective, String) -> Unit,
-    val onItemRemove: (KidObjective) -> Unit
+    val onItemRemove: (KidObjective) -> Unit,
+    val onItemEdit: (KidObjective, String) -> Unit
 ) : RecyclerView.Adapter<ObjectivesAdapter.BaseViewHolder<*>>() {
 
-    var userType = UserType.COORDINATOR
 
     private var items: List<ObjectivesListItem> = emptyList()
 
@@ -78,23 +77,16 @@ class ObjectivesAdapter(
         private val onToggleClicked: (KidObjective, Boolean) -> Unit,
         private val onGenerateObjectiveReport: (KidObjective, String) -> Unit,
         private val onItemRemove: (KidObjective) -> Unit,
-        private val userType: UserType
+        private val onItemEdit: (KidObjective, String) -> Unit
     ) : BaseViewHolder<ObjectivesListItem.ObjectiveItem>(binding.root) {
 
         override fun bind(item: ObjectivesListItem.ObjectiveItem) {
             binding.nameView.text = item.objectiveName
 
-            val isCoordinator = userType == UserType.COORDINATOR
-
-            // Show/hide toggle based on showToggle flag
-            binding.activeToggle.isVisible = isCoordinator
-            binding.objectiveReportView.isVisible = isCoordinator && item.kidObjective.active
-
-            // Set toggle state without triggering listener
-            if (isCoordinator) {
-                binding.activeToggle.setOnCheckedChangeListener(null)
-                binding.activeToggle.isChecked = item.kidObjective.active
-            }
+            binding.activeToggle.isVisible = true
+            binding.objectiveReportView.isVisible = item.kidObjective.active
+            binding.activeToggle.setOnCheckedChangeListener(null)
+            binding.activeToggle.isChecked = item.kidObjective.active
 
             // Set toggle listener
             binding.activeToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -109,17 +101,17 @@ class ObjectivesAdapter(
                     onItemClicked(item)
                 } else {
                     binding.buttonsLayout.root.isVisible = false
-                    binding.activeToggle.isVisible = isCoordinator
+                    binding.activeToggle.isVisible = true
+                    binding.objectiveReportView.isVisible = item.kidObjective.active
                 }
             }
 
             // Set long click listener to show buttons layout
             binding.root.setOnLongClickListener {
-                if (isCoordinator) {
-                    binding.buttonsLayout.root.isVisible = true
-                    binding.activeToggle.isVisible = false
-                    true
-                } else false
+                binding.buttonsLayout.root.isVisible = true
+                binding.activeToggle.isVisible = false
+                binding.objectiveReportView.isVisible = false
+                true
             }
 
             // Set click listener for objective report
@@ -131,13 +123,19 @@ class ObjectivesAdapter(
             val removeView = binding.buttonsLayout.root.findViewById<View>(net.abaresults.progresspath.R.id.removeView)
             val editView = binding.buttonsLayout.root.findViewById<View>(net.abaresults.progresspath.R.id.editView)
 
-            // Hide edit button - objective editing moved to obj_library
-            editView.isVisible = false
+            editView.isVisible = true
 
             // Set click listener for remove button
             removeView.setOnClickListener {
                 // Remove kidObjective (not the master objective)
                 onItemRemove(item.kidObjective)
+            }
+
+            editView.setOnClickListener {
+                binding.buttonsLayout.root.isVisible = false
+                binding.activeToggle.isVisible = true
+                binding.objectiveReportView.isVisible = item.kidObjective.active
+                onItemEdit(item.kidObjective, item.objectiveName)
             }
 
             // Gray out objective with all items mastered
@@ -165,7 +163,7 @@ class ObjectivesAdapter(
             }
             VIEW_TYPE_OBJECTIVE -> {
                 val binding = ObjectiveItemBinding.inflate(inflater, parent, false)
-                ObjectiveViewHolder(binding, onItemClicked, onToggleClicked, onGenerateObjectiveReport, onItemRemove, userType)
+                ObjectiveViewHolder(binding, onItemClicked, onToggleClicked, onGenerateObjectiveReport, onItemRemove, onItemEdit)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
