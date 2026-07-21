@@ -2,12 +2,19 @@ package app.springdata.coordinator.view.obj_item_library
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,6 +66,7 @@ class ObjItemLibraryFragment : BaseFragment() {
                 is ObjItemLibraryState.Error -> showError(it.generalError)
                 is ObjItemLibraryState.Idle -> {}
                 is ObjItemLibraryState.ContentLoaded -> handleContentLoaded(it.items)
+                is ObjItemLibraryState.ObjectiveKidsLoaded -> showObjectiveKidsDialog(it.kids)
                 is ObjItemLibraryState.GoToObjLibrary -> navigateToObjLibrary()
             }
         }
@@ -72,6 +80,7 @@ class ObjItemLibraryFragment : BaseFragment() {
 
     private fun configureViews() {
         showBottomBar()
+        addMenuButtons()
 
         objItemsAdapter = ObjItemLibraryAdapter(
             onItemEdit = { item ->
@@ -92,6 +101,25 @@ class ObjItemLibraryFragment : BaseFragment() {
         }
     }
 
+    private fun addMenuButtons() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.obj_item_library_toolbar_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_objective_kids -> {
+                        viewModel.takeAction(ObjItemLibraryAction.ShowObjectiveKids)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
     private fun handleContentLoaded(items: List<ObjItem>) {
         objItemsAdapter.updateData(items)
     }
@@ -103,6 +131,38 @@ class ObjItemLibraryFragment : BaseFragment() {
 
     private fun navigateToObjLibrary() {
         findNavController().navigate(R.id.objLibraryFragment)
+    }
+
+    private fun showObjectiveKidsDialog(kids: List<ObjectiveKidListItem>) {
+        if (kids.isEmpty()) {
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.objective_kids_dialog_title))
+                .setMessage(getString(R.string.objective_kids_empty))
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+            return
+        }
+
+        val adapter = object : ArrayAdapter<ObjectiveKidListItem>(
+            requireContext(),
+            android.R.layout.simple_list_item_2,
+            android.R.id.text1,
+            kids
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val item = getItem(position)
+                view.findViewById<TextView>(android.R.id.text1).text = item?.kidName.orEmpty()
+                view.findViewById<TextView>(android.R.id.text2).text = item?.clinicName.orEmpty()
+                return view
+            }
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.objective_kids_dialog_title))
+            .setAdapter(adapter, null)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     private fun showLoading() =

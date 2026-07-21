@@ -111,6 +111,27 @@ class KidObjectiveRepository @Inject constructor(
         }
     }
 
+    suspend fun getKidObjectivesForObjective(objectiveId: String): Result<List<KidObjective>> {
+        if (objectiveId.isBlank()) {
+            return Result.failure(Exception("Objective ID cannot be empty."))
+        }
+
+        return try {
+            val querySnapshot = firestore.collection("kid_objectives")
+                .whereEqualTo("objectiveId", objectiveId)
+                .get()
+                .await()
+
+            val kidObjectives = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(KidObjective::class.java)
+            }
+
+            Result.success(kidObjectives)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun updateKidObjective(kidObjective: KidObjective): Result<Unit> {
         if (kidObjective.id.isBlank()) {
             return Result.failure(Exception("Kid Objective ID cannot be empty."))

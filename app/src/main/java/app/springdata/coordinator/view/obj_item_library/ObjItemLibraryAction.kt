@@ -6,4 +6,5 @@ sealed class ObjItemLibraryAction {
     object Start : ObjItemLibraryAction()
     data class UpdateItem(val item: ObjItem) : ObjItemLibraryAction()
     data class RemoveItem(val item: ObjItem) : ObjItemLibraryAction()
+    object ShowObjectiveKids : ObjItemLibraryAction()
 }

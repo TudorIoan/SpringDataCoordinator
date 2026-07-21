@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_objective_kids"
+        android:icon="@drawable/ic_kids"
+        android:title="@string/objective_kids"
+        app:showAsAction="always" />
+
+</menu>

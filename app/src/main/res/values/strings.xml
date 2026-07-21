@@ -8,6 +8,10 @@
     <string name="loading_please_wait">Loading, please wait…</string>
     <string name="msg_invalid_number_selected">You must enter a valid integer</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="objective_kids">Kids</string>
+    <string name="objective_kids_dialog_title">Kids using this objective</string>
+    <string name="objective_kids_empty">No kids are using this objective.</string>
+    <string name="unknown_clinic">Unknown clinic</string>
 
     <string name="item_last_answer">Last Answer: &lt;b&gt;%s&lt;/b&gt; on &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="item_by_therapist">By therapist: &lt;b&gt;%s&lt;/b&gt;</string>
