@@ -19,7 +19,7 @@ class ItemsAdapter(
     private val onToggleClicked: (KidObjectiveItem) -> Unit,
     private val onYesClicked: (KidObjectiveItem) -> Unit,
     private val onNoClicked: (KidObjectiveItem) -> Unit,
-    private val onFrequencySet: (KidObjectiveItem, Int) -> Unit,
+    private val onFrequencySet: (KidObjectiveItem, Int, Int) -> Unit,
     private val onProgressSet: (KidObjectiveItem, Int) -> Unit,
     private val onShowProgress: (KidObjectiveItem) -> Unit,
     private val onSetMastered: (KidObjectiveItem) -> Unit,
@@ -99,7 +99,9 @@ class ItemsAdapter(
         holder.binding.setButton.setOnClickListener {
             val frequencyText = holder.binding.frequencyEditText.text.toString()
             val frequency = frequencyText.toIntOrNull() ?: 0
-            onFrequencySet(item, frequency)
+            val intervalText = holder.binding.frequencyIntervalEditText.text.toString()
+            val interval = intervalText.toIntOrNull() ?: 0
+            onFrequencySet(item, frequency, interval)
         }
 
         holder.binding.setPercentageButton.setOnClickListener {

@@ -27,6 +27,7 @@ data class KidObjectiveItem(
 
 data class FrequencyItem(
     val frequency: Int = 0,
+    val interval: Int = 0,
     val date: Date? = null
 )
 

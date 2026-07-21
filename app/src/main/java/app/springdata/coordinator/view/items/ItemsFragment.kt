@@ -102,8 +102,8 @@ class      ItemsFragment : BaseFragment() {
             onToggleClicked = { item ->
                 viewModel.takeAction(ItemAction.ItemToggleClicked(item))
             },
-            onFrequencySet = { item, freq ->
-                viewModel.takeAction(ItemAction.FrequencySet(item, freq))
+            onFrequencySet = { item, freq, interval ->
+                viewModel.takeAction(ItemAction.FrequencySet(item, freq, interval))
             },
             onProgressSet = { item, progress ->
                 viewModel.takeAction(ItemAction.ProgressSet(item, progress))
@@ -175,7 +175,7 @@ class      ItemsFragment : BaseFragment() {
         val dateFormat = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
         val entries: List<Pair<String, String>> = when (item.objItem.type) {
             ObjItemType.FREQUENCY -> item.frequencyList.map {
-                it.frequency.toString() to (it.date?.let { d -> dateFormat.format(d) } ?: "No date")
+                "${it.frequency} / ${it.interval} min" to (it.date?.let { d -> dateFormat.format(d) } ?: "No date")
             }
             ObjItemType.CHECKMARK -> item.checkmarkList.map {
                 dateFormat.format(it) to ""

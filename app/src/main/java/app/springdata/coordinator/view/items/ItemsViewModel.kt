@@ -47,7 +47,7 @@ class ItemsViewModel @Inject constructor(
             is ItemAction.ItemYesClicked -> handleYesClicked(action.item)
             is ItemAction.ItemNoClicked -> handleNoClicked(action.item)
             is ItemAction.RemoveItem -> handleRemoveItem(action.item)
-            is ItemAction.FrequencySet -> handleFrequencySet(action.item, action.frequency)
+            is ItemAction.FrequencySet -> handleFrequencySet(action.item, action.frequency, action.interval)
             is ItemAction.ProgressSet -> handleProgressSet(action.item, action.progress)
             is ItemAction.SetMastered -> handleSetMastered(action.item)
             is ItemAction.CheckmarkClicked -> handleCheckmarkClicked(action.item)
@@ -133,12 +133,12 @@ class ItemsViewModel @Inject constructor(
         }
     }
 
-    private fun handleFrequencySet(item: KidObjectiveItem, frequency: Int) {
+    private fun handleFrequencySet(item: KidObjectiveItem, frequency: Int, interval: Int) {
         update(ItemState.Loading)
         item.lastResponseTime = Date()
         if (item.firstResponseTime == null) item.firstResponseTime = Date()
         item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
-        item.frequencyList.add(FrequencyItem(frequency, Date()))
+        item.frequencyList.add(FrequencyItem(frequency, interval, Date()))
         viewModelScope.launch {
             val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
             result.onSuccess {
