@@ -20,6 +20,21 @@
                 android:layout_height="?attr/actionBarSize"
                 app:titleTextAppearance="@style/ToolbarTitleStyle" />
 
+            <TextView
+                android:id="@+id/offlineInfoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/offlineRed"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="@string/no_internet_connection"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <View
                 android:id="@+id/separator"
                 android:layout_width="match_parent"
@@ -28,7 +43,7 @@
                 app:layout_constraintBottom_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@id/offlineInfoTextView" />
 
 
         </com.google.android.material.appbar.AppBarLayout>

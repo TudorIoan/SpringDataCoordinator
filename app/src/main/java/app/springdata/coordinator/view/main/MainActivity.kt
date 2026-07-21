@@ -1,8 +1,13 @@
 package app.springdata.coordinator.view.main
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
@@ -18,7 +23,21 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var connectivityManager: ConnectivityManager
     private val viewModel: MainViewModel by viewModels()
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            updateNetworkStatus()
+        }
+
+        override fun onLost(network: Network) {
+            updateNetworkStatus()
+        }
+
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            updateNetworkStatus()
+        }
+    }
 
     private val navHostFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
@@ -28,7 +47,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         observeData(viewModel)
+        setupNetworkStatus()
         viewModel.takeAction(MainAction.Start)
+    }
+
+    override fun onDestroy() {
+        if (::connectivityManager.isInitialized) {
+            runCatching { connectivityManager.unregisterNetworkCallback(networkCallback) }
+        }
+        super.onDestroy()
     }
 
     private fun setupNavigation(isLoggedIn: Boolean) {
@@ -91,5 +118,21 @@ class MainActivity : AppCompatActivity() {
 
     fun updateBottomNav() {
         viewModel.takeAction(MainAction.UpdateAuthStatus)
+    }
+
+    private fun setupNetworkStatus() {
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        updateNetworkStatus()
+    }
+
+    private fun updateNetworkStatus() {
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        val hasValidatedInternet = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+
+        runOnUiThread {
+            binding.offlineInfoTextView.isVisible = !hasValidatedInternet
+        }
     }
 }
