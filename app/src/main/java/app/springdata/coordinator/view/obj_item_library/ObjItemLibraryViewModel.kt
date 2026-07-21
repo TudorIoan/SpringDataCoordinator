@@ -83,6 +83,7 @@ class ObjItemLibraryViewModel @Inject constructor(
             result.onSuccess {
                 orgRepo.setSelectedObjective(updatedObjective)
                 updateItems()
+                loadObjectiveKids()
             }.onFailure { exception ->
                 update(ObjItemLibraryState.Error(exception.message ?: "Error updating item"))
             }
@@ -102,6 +103,7 @@ class ObjItemLibraryViewModel @Inject constructor(
             result.onSuccess {
                 orgRepo.setSelectedObjective(updatedObjective)
                 updateItems()
+                loadObjectiveKids()
             }.onFailure { exception ->
                 update(ObjItemLibraryState.Error(exception.message ?: "Error removing item"))
             }
@@ -112,21 +114,25 @@ class ObjItemLibraryViewModel @Inject constructor(
         update(ObjItemLibraryState.Loading)
 
         viewModelScope.launch {
-            val objective = orgRepo.requireSelectedObjective()
-            val kidObjectivesResult = kidObjectiveRepo.getKidObjectivesForObjective(objective.id)
+            loadObjectiveKids()
+        }
+    }
 
-            kidObjectivesResult.onSuccess { kidObjectives ->
-                val kidIds = kidObjectives.map { it.kidId }.filter { it.isNotBlank() }.distinct()
-                val kidItems = kidIds.mapNotNull { kidId ->
-                    val kid = kidRepo.getKidById(kidId).getOrNull() ?: return@mapNotNull null
-                    val clinicName = clinicRepo.getClinicById(kid.clinicId).getOrNull()?.name ?: "Unknown clinic"
-                    ObjectiveKidListItem(kid.name, clinicName)
-                }.sortedWith(compareBy<ObjectiveKidListItem> { it.clinicName.lowercase() }.thenBy { it.kidName.lowercase() })
+    private suspend fun loadObjectiveKids() {
+        val objective = orgRepo.requireSelectedObjective()
+        val kidObjectivesResult = kidObjectiveRepo.getKidObjectivesForObjective(objective.id)
 
-                update(ObjItemLibraryState.ObjectiveKidsLoaded(kidItems))
-            }.onFailure { exception ->
-                update(ObjItemLibraryState.Error(exception.message ?: "Error loading kids"))
-            }
+        kidObjectivesResult.onSuccess { kidObjectives ->
+            val kidIds = kidObjectives.map { it.kidId }.filter { it.isNotBlank() }.distinct()
+            val kidItems = kidIds.mapNotNull { kidId ->
+                val kid = kidRepo.getKidById(kidId).getOrNull() ?: return@mapNotNull null
+                val clinicName = clinicRepo.getClinicById(kid.clinicId).getOrNull()?.name ?: "Unknown clinic"
+                ObjectiveKidListItem(kid.name, clinicName)
+            }.sortedWith(compareBy<ObjectiveKidListItem> { it.clinicName.lowercase() }.thenBy { it.kidName.lowercase() })
+
+            update(ObjItemLibraryState.ObjectiveKidsLoaded(kidItems))
+        }.onFailure { exception ->
+            update(ObjItemLibraryState.Error(exception.message ?: "Error loading kids"))
         }
     }
 }
