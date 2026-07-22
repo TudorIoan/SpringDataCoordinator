@@ -12,7 +12,28 @@
           "package_name": "app.springdata.coordinator"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "770818568477-jo0oipo5top420rjbsaoa5b98efgcoek.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.springdata.coordinator",
+            "certificate_hash": "bd4d1c7a1ace52c1df1050bda6b51d9ebb075142"
+          }
+        },
+        {
+          "client_id": "770818568477-q91jbu69bkpmcm6c1tl14q5lb2ru0l7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.springdata.coordinator",
+            "certificate_hash": "4dc73b6f8e11badb5de187f3091c842e29927f4a"
+          }
+        },
+        {
+          "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDL2RU2PxLIAZqL349xIyWHDU68hq8J1mQ"
@@ -20,7 +41,57 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770818568477:android:a7ce7847209be42f41b1f4",
+        "android_client_info": {
+          "package_name": "app.springdata.therapist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770818568477-bnnmenfrr3jnk25otf5dkndh3rf870j2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.springdata.therapist",
+            "certificate_hash": "bd4d1c7a1ace52c1df1050bda6b51d9ebb075142"
+          }
+        },
+        {
+          "client_id": "770818568477-pfh3rpp8i7gc2klod2hbvn1sj8tgj59l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.springdata.therapist",
+            "certificate_hash": "4dc73b6f8e11badb5de187f3091c842e29927f4a"
+          }
+        },
+        {
+          "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL2RU2PxLIAZqL349xIyWHDU68hq8J1mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +102,12 @@
           "package_name": "net.abaresults.progresspath"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDL2RU2PxLIAZqL349xIyWHDU68hq8J1mQ"
@@ -39,7 +115,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770818568477-6o94pmai2jqi9q9le0c0hjv0m6vb5lmd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
