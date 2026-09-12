@@ -29,6 +29,7 @@ enum class ObjectiveType(val displayName: String, val level: ObjLevel) {
     AUTOCLITIC("Autoclitic", ObjLevel.INTERMEDIATE),
     READING_DICTATION("Academic: Reading & Dictation", ObjLevel.INTERMEDIATE),
     NUMBER_QUANTITY("Academic: Number & Quantity", ObjLevel.INTERMEDIATE),
+    SCHOOL_INTERMEDIATE("School", ObjLevel.INTERMEDIATE),
 
     // ADVANCED Level
     MULTIPLE_VERBAL_CONTROL("Multiple Verbal Control & Problem Solving", ObjLevel.ADVANCED),
@@ -36,7 +37,8 @@ enum class ObjectiveType(val displayName: String, val level: ObjLevel) {
     PAST_EVENT_RECALL("Past Event Recall: Visual, Experience, Oral", ObjLevel.ADVANCED),
     SOCIAL_CONVERSATION("Social & Conversation Skills", ObjLevel.ADVANCED),
     PRIVATE_EVENTS("Private Events (Emotions)", ObjLevel.ADVANCED),
-    ABSTRACT_REASONING("Abstract Reasoning", ObjLevel.ADVANCED);
+    ABSTRACT_REASONING("Abstract Reasoning", ObjLevel.ADVANCED),
+    SCHOOL_ADVANCED("School", ObjLevel.ADVANCED);
 
     companion object {
         fun getAllDisplayNames(): List<String> {
