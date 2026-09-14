@@ -62,9 +62,11 @@ class ItemsAdapter(
         holder.binding.checkmarkYesButton.visibility = View.GONE
         holder.binding.showProgressButton.visibility = View.VISIBLE
         holder.binding.setMasteredButton.visibility = View.GONE
+        holder.binding.activationSwitchLayout.visibility = if (!item.mastered) View.VISIBLE else View.GONE
         holder.binding.setMasteredButton.text = if (item.mastered) "Set Un-mastered" else "Set Mastered"
         holder.binding.switchToggle.visibility = if (!item.mastered) View.VISIBLE else View.GONE
         holder.binding.masteredImageView.visibility = if (item.mastered) View.VISIBLE else View.GONE
+        holder.binding.activationStatusLabel.text = if (item.active) "Active" else "Inactive"
 
         holder.binding.switchToggle.setOnCheckedChangeListener(null) // Prevent triggering listener
         holder.binding.switchToggle.isChecked = item.active
@@ -93,6 +95,7 @@ class ItemsAdapter(
 
         holder.binding.switchToggle.setOnCheckedChangeListener { _, isChecked ->
             item.active = isChecked
+            holder.binding.activationStatusLabel.text = if (isChecked) "Active" else "Inactive"
             onToggleClicked(item)
         }
 
@@ -125,6 +128,7 @@ class ItemsAdapter(
         // Long click listener for non-mastered items (frequency, checkmark, progress, and yes/no)
         holder.binding.root.setOnLongClickListener {
             holder.binding.switchToggle.visibility = View.GONE
+            holder.binding.activationSwitchLayout.visibility = View.GONE
             holder.binding.showProgressButton.visibility = View.GONE
             holder.binding.masteredImageView.visibility = View.GONE
             holder.binding.setMasteredButton.visibility = View.VISIBLE
@@ -140,8 +144,10 @@ class ItemsAdapter(
                 if (item.mastered) {
                     holder.binding.masteredImageView.visibility = View.VISIBLE
                     holder.binding.switchToggle.visibility = View.GONE
+                    holder.binding.activationSwitchLayout.visibility = View.GONE
                 } else {
                     holder.binding.switchToggle.visibility = View.VISIBLE
+                    holder.binding.activationSwitchLayout.visibility = View.VISIBLE
                 }
             }
         }

@@ -82,14 +82,11 @@ class TherapistFragment : BaseFragment() {
             adapter = therapistAdapter
         }
 
-        binding.fabAddTherapist.setOnClickListener {
-            findNavController().navigate(R.id.addTherapistFragment)
-        }
     }
 
     private fun handleContentLoaded(therapists: List<TherapistVM>, isClinic: Boolean) {
         therapistAdapter.updateData(therapists)
-        binding.fabAddTherapist.isVisible = !isClinic
+        setBottomAddVisible(!isClinic)
     }
 
     private fun showError(generalError: String) {

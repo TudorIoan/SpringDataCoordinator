@@ -22,6 +22,7 @@ class LoginViewModel @Inject constructor(
         when (action) {
             is LoginAction.Start -> handleStart()
             is LoginAction.LoginClicked -> handleLoginClicked(action.email, action.password)
+            is LoginAction.ForgotPasswordClicked -> handleForgotPasswordClicked(action.email)
         }
     }
 
@@ -51,16 +52,23 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun handleForgotPasswordClicked(email: String) {
+        if (validateEmail(email)) {
+            update(LoginState.Loading)
+            viewModelScope.launch {
+                userRepo.sendPasswordResetEmail(email)
+                    .onSuccess { update(LoginState.PasswordResetEmailSent) }
+                    .onFailure { update(LoginState.Error(it.message ?: "Unable to send password reset email", "", "")) }
+            }
+        }
+    }
+
     private fun validateInputs(email: String, password: String): Boolean {
         var isValid = true
-        var emailError = ""
+        val emailError = getEmailError(email)
         var passwordError = ""
 
-        if (email.isEmpty()) {
-            emailError = "Email cannot be empty"
-            isValid = false
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailError = "Enter a valid email address"
+        if (emailError.isNotEmpty()) {
             isValid = false
         }
 
@@ -75,5 +83,21 @@ class LoginViewModel @Inject constructor(
         update(LoginState.Error("", emailError, passwordError))
 
         return isValid
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        val emailError = getEmailError(email)
+
+        update(LoginState.Error("", emailError, ""))
+
+        return emailError.isEmpty()
+    }
+
+    private fun getEmailError(email: String): String {
+        return when {
+            email.isEmpty() -> "Email cannot be empty"
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Enter a valid email address"
+            else -> ""
+        }
     }
 }

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import app.springdata.coordinator.BaseFragment
 import app.springdata.coordinator.R
@@ -33,7 +33,7 @@ class RegisterFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.isVisible = false
+        activity?.findViewById<View>(R.id.bottomNavigationCard)?.isVisible = false
 
         configureViews()
     }
@@ -120,7 +120,7 @@ class RegisterFragment : BaseFragment() {
         }
 
         if (confirmPasswordError.isNotEmpty()) {
-            binding.confirmPasswordInputLayout.error = passwordError
+            binding.confirmPasswordInputLayout.error = confirmPasswordError
             binding.confirmPasswordEditText.requestFocus()
         } else {
             binding.confirmPasswordInputLayout.error = null
@@ -132,7 +132,10 @@ class RegisterFragment : BaseFragment() {
     }
 
     private fun navigateToHome() {
-        findNavController().navigate(R.id.clinicsFragment)
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.main_nav_graph, true)
+            .build()
+        findNavController().navigate(R.id.clinicsFragment, null, navOptions)
     }
 
     private fun showLoading() = binding.loadingViewInclude.loadingView.apply { visibility = View.VISIBLE }

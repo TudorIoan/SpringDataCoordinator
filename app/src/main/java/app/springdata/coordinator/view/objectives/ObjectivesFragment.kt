@@ -101,13 +101,21 @@ class ObjectivesFragment : BaseFragment() {
         viewModel.state.observe(viewLifecycleOwner, stateObserver)
 
         viewModel.title.observe(viewLifecycleOwner) { title ->
+            val titleParts = title.split(" > ", limit = 2)
+            val clinicName = titleParts.firstOrNull().orEmpty()
+            val kidName = titleParts.getOrNull(1).orEmpty()
+
+            setTitle(kidName.ifEmpty { getString(R.string.objectives) })
             binding.subtitleInclude.subtitleTextView.isVisible = true
-            binding.subtitleInclude.subtitleTextView.text = title
+            binding.subtitleInclude.subtitleTextView.text = getString(R.string.clinic_title, clinicName)
+            binding.subtitleInclude.sectionTitleTextView.isVisible = true
+            binding.subtitleInclude.sectionTitleTextView.text = getString(R.string.objectives)
         }
     }
 
     private fun configureViews() {
         showBottomBar()
+        configureEmptyState()
 
         objectivesAdapter = ObjectivesAdapter(
             onItemClicked = { objectiveListItem ->
@@ -132,11 +140,6 @@ class ObjectivesFragment : BaseFragment() {
             adapter = objectivesAdapter
         }
 
-        binding.fabAddObjective.setOnClickListener {
-            findNavController().navigate(R.id.addObjectiveFragment)
-        }
-        binding.fabAddObjective.isVisible = true
-
         addMenuButtons()
     }
 
@@ -146,11 +149,20 @@ class ObjectivesFragment : BaseFragment() {
 
     private fun handleContentLoaded(objectives: List<ObjectivesListItem>) {
         objectivesAdapter.set(objectives)
+        binding.objectivesRecyclerView.isVisible = objectives.isNotEmpty()
+        binding.emptyStateInclude.emptyStateView.isVisible = objectives.isEmpty()
+    }
+
+    private fun configureEmptyState() {
+        binding.emptyStateInclude.emptyTitleTextView.text = "No objectives yet"
+        binding.emptyStateInclude.emptyMessageTextView.text =
+            "Add objectives for this kid and they will appear here."
     }
 
     private fun showError(generalError: String) {
         binding.subtitleInclude.errorTextView.text = generalError
         binding.subtitleInclude.errorTextView.visibility = View.VISIBLE
+        binding.emptyStateInclude.emptyStateView.isVisible = false
     }
 
     private fun showLoading() = binding.loadingViewInclude.loadingView.apply { visibility = View.VISIBLE }

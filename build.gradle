@@ -6,14 +6,7 @@ buildscript {
     ext.compileSdkVersion = 35
     ext.targetSdkVersion = 35
     ext.minSdkVersion = 28
-    ext.playServicesVersion = '16.0.0'
-    ext.kotlinCoroutinesVersion = '1.7.3'
-    ext.appCompatVersion = '1.2.0'
-    ext.constraintLayoutVersion = '2.0.4'
-    ext.legacySupportVersion = '1.0.0'
-    ext.multidex_version = '2.0.1'
     ext.googleServices = '4.4.0'
-    ext.salesforcePushVersion = '8.0.7'
     ext.firebaseCrashlyticsVersion = '2.9.4'
 
     repositories {
@@ -30,7 +23,6 @@ buildscript {
         // in the individual module build.gradle files
         classpath "com.google.gms:google-services:$googleServices"
         classpath "com.google.firebase:firebase-crashlytics-gradle:$firebaseCrashlyticsVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
     }
 }
 

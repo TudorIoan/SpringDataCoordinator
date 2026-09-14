@@ -18,18 +18,6 @@
         tools:layout="@layout/fragment_register" />
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="app.springdata.coordinator.view.home.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/moreFragment"
-        android:name="app.springdata.coordinator.view.more.MoreFragment"
-        android:label="More"
-        tools:layout="@layout/fragment_more" />
-
-    <fragment
         android:id="@+id/myAccountFragment"
         android:name="app.springdata.coordinator.view.my_account.MyAccountFragment"
         android:label="My Account"

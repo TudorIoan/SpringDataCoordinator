@@ -72,6 +72,7 @@ class ClinicsFragment : BaseFragment() {
     private fun configureViews() {
         showTopBar()
         showBottomBar()
+        configureEmptyState()
 
         clinicsAdapter = ClinicsAdapter(
             onItemClicked = { clinic ->
@@ -90,19 +91,24 @@ class ClinicsFragment : BaseFragment() {
             adapter = clinicsAdapter
         }
 
-        binding.fabAddClinic.setOnClickListener {
-            findNavController().navigate(R.id.addClinicFragment)
-        }
-        binding.fabAddClinic.isVisible = true
     }
 
     private fun handleContentLoaded(clinics: List<Clinic>) {
         clinicsAdapter.updateData(clinics)
+        binding.clinicsRecyclerView.isVisible = clinics.isNotEmpty()
+        binding.emptyStateInclude.emptyStateView.isVisible = clinics.isEmpty()
+    }
+
+    private fun configureEmptyState() {
+        binding.emptyStateInclude.emptyTitleTextView.text = "No clinics yet"
+        binding.emptyStateInclude.emptyMessageTextView.text =
+            "Create your first clinic to start adding kids, therapists, and objectives."
     }
 
     private fun showError(generalError: String) {
         binding.errorTextView.text = generalError
         binding.errorTextView.visibility = View.VISIBLE
+        binding.emptyStateInclude.emptyStateView.isVisible = false
     }
 
     private fun navigateToKids() {

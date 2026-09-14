@@ -6,4 +6,5 @@ package app.springdata.coordinator.view.my_account
 sealed class MyAccountAction {
     object Start : MyAccountAction()
     object LogoutClicked : MyAccountAction()
+    class SendFeedbackClicked(val message: String) : MyAccountAction()
 }

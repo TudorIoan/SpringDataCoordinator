@@ -5,69 +5,78 @@
     android:viewportWidth="100"
     android:viewportHeight="100">
 
-    <!-- Outer Frame (Dark Slate Blue) -->
+    <!-- Cadrul exterior mărit (0-100), contur albastru închis, interior transparent -->
     <path
-        android:strokeColor="#424D6B"
-        android:strokeWidth="5"
+        android:strokeColor="#0E1726"
+        android:strokeWidth="4"
         android:fillColor="#00000000"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:pathData="M15,2 L85,2 A13,13 0 0 1 98,15 L98,85 A13,13 0 0 1 85,98 L15,98 A13,13 0 0 1 2,85 L2,15 A13,13 0 0 1 15,2 Z" />
 
-    <!-- CONNECTING PATH (C-shape connecting 5 dots: (1,3)->(1,1)->(3,1)->(3,3)) -->
+    <!-- RÂNDUL 1 (Y = 20.25) -->
+    <!-- (1,1) Cerc Gri, R=11.5, Centru X=22 -->
     <path
-        android:strokeColor="#424D6B"
-        android:strokeWidth="4.5"
+        android:fillColor="#A8B8B6"
+        android:pathData="M 22,20.25 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+
+    <!-- (1,2) Săgeată, lățime = 16 -->
+    <path
+        android:strokeColor="#A8B8B6"
+        android:strokeWidth="3.0"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
-        android:pathData="M 77.5,22.5 L 22.5,22.5 L 22.5,77.5 L 77.5,77.5" />
+        android:pathData="M 42,20.25 L 58,20.25 M 53,15.25 L 58,20.25 L 53,25.25" />
 
-    <!-- ROW 1 (Y = 22.5) -->
-    <!-- (1,1) Dark Blue -->
+    <!-- (1,3) Cerc Albastru închis, R=11.5, Centru X=78 -->
     <path
-        android:fillColor="#424D6B"
-        android:pathData="M 22.5,22.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:fillColor="#0E1726"
+        android:pathData="M 78,20.25 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
 
-    <!-- (1,2) Dark Blue -->
-    <path
-        android:fillColor="#424D6B"
-        android:pathData="M 50,22.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
-
-    <!-- (1,3) Dark Blue -->
-    <path
-        android:fillColor="#424D6B"
-        android:pathData="M 77.5,22.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
-
-    <!-- ROW 2 (Y = 50.0) -->
-    <!-- (2,1) Dark Blue -->
-    <path
-        android:fillColor="#424D6B"
-        android:pathData="M 22.5,50 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
-
-    <!-- (2,2) Grey -->
+    <!-- RÂNDUL 2 (Y = 50) -->
+    <!-- (2,1) Cerc Gri, R=11.5, Centru X=22 -->
     <path
         android:fillColor="#A8B8B6"
-        android:pathData="M 50,50 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:pathData="M 22,50 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
 
-    <!-- (2,3) Grey -->
+    <!-- (2,2) Săgeată, lățime = 16 -->
     <path
-        android:fillColor="#A8B8B6"
-        android:pathData="M 77.5,50 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:strokeColor="#A8B8B6"
+        android:strokeWidth="3.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 42,50 L 58,50 M 53,45 L 58,50 L 53,55" />
 
-    <!-- ROW 3 (Y = 77.5) -->
-    <!-- (3,1) Dark Blue -->
+    <!-- (2,3) Cerc Albastru închis, R=11.5, Centru X=78 -->
     <path
-        android:fillColor="#424D6B"
-        android:pathData="M 22.5,77.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:fillColor="#0E1726"
+        android:pathData="M 78,50 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
 
-    <!-- (3,2) Dark Blue -->
+    <!-- RÂNDUL 3 (Y = 79.75) -->
+    <!-- (3,1) Cerc Albastru închis, R=11.5, Centru X=22 -->
     <path
-        android:fillColor="#424D6B"
-        android:pathData="M 50,77.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:fillColor="#0E1726"
+        android:pathData="M 22,79.75 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
 
-    <!-- (3,3) Dark Blue -->
+    <!-- (3,2) Săgeată, lățime = 16 -->
     <path
-        android:fillColor="#424D6B"
-        android:pathData="M 77.5,77.5 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+        android:strokeColor="#A8B8B6"
+        android:strokeWidth="3.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 42,79.75 L 58,79.75 M 53,74.75 L 58,79.75 L 53,84.75" />
+
+    <!-- (3,3) Cerc Albastru închis cu bifă, R=11.5, Centru X=78 -->
+    <path
+        android:fillColor="#0E1726"
+        android:pathData="M 78,79.75 m -11.5,0 a 11.5,11.5 0 1,0 23,0 a 11.5,11.5 0 1,0 -23,0" />
+
+    <!-- Bifa albă pe cerculețul (3,3) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M72.5,79.75 L76.5,83.75 L84,76.25" />
 
 </vector>

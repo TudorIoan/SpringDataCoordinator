@@ -5,5 +5,7 @@ sealed class MyAccountState {
         class Content(val name: String, val email: String): MyAccountState()
         object Loading : MyAccountState()
         object LogoutDone : MyAccountState()
+        object FeedbackSent : MyAccountState()
+        class FeedbackValidationError(val messageError: String) : MyAccountState()
         class Error(val message: String) : MyAccountState()
 }

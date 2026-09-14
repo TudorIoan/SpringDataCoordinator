@@ -1,12 +1,17 @@
 package app.springdata.coordinator.view.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -14,16 +19,21 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import app.springdata.coordinator.R
 import app.springdata.coordinator.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var connectivityManager: ConnectivityManager
+    private var currentDestinationId: Int? = null
+    private var isBottomBarExpanded = true
+    private var addOverrideVisible: Boolean? = null
+    private var bottomBarTouchStartX = 0f
+    private var bottomBarTouchStartY = 0f
     private val viewModel: MainViewModel by viewModels()
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
@@ -46,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        configureSystemBars()
         observeData(viewModel)
         setupNetworkStatus()
         viewModel.takeAction(MainAction.Start)
@@ -59,7 +70,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation(isLoggedIn: Boolean) {
-
         val navController = navHostFragment.navController
 
         val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
@@ -71,27 +81,161 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfig = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfig)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            currentDestinationId = destination.id
+            addOverrideVisible = null
+            isBottomBarExpanded = destination.id == R.id.clinicsFragment
+            binding.toolbar.post { tintToolbarNavigationIcon() }
+            updateBottomNavSelection(destination.id)
+            updateNetworkStatus()
+        }
 
-        binding.bottomNavigationView.setupWithNavController(navController)
+        currentDestinationId = startDestinationId
+        tintToolbarNavigationIcon()
+        updateBottomNavSelection(startDestinationId)
+        updateNetworkStatus()
 
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.clinicsFragment -> {
-                    navController.popBackStack(R.id.clinicsFragment, false)
-                    true
+        binding.clinicsNavItem.setOnClickListener {
+            navController.popBackStack(R.id.clinicsFragment, false)
+        }
+
+        binding.libraryNavItem.setOnClickListener {
+            navController.popBackStack(R.id.clinicsFragment, false)
+            if (navController.currentDestination?.id != R.id.objLibraryFragment) {
+                navController.navigate(R.id.objLibraryFragment)
+            }
+        }
+
+        binding.accountNavItem.setOnClickListener {
+            navController.popBackStack(R.id.clinicsFragment, false)
+            if (navController.currentDestination?.id != R.id.myAccountFragment) {
+                navController.navigate(R.id.myAccountFragment)
+            }
+        }
+
+        binding.addNavItem.setOnClickListener {
+            when (navController.currentDestination?.id) {
+                R.id.clinicsFragment -> navController.navigate(R.id.addClinicFragment)
+                R.id.kidsFragment -> navController.navigate(R.id.addKidFragment)
+                R.id.objectivesFragment -> navController.navigate(R.id.addObjectiveFragment)
+                R.id.objLibraryFragment -> navController.navigate(R.id.addObjLibraryFragment)
+                R.id.objItemLibraryFragment -> navController.navigate(R.id.addObjItemFragment)
+                R.id.therapistsFragment -> navController.navigate(R.id.addTherapistFragment)
+            }
+        }
+
+        binding.bottomNavigationCard.setOnClickListener {
+            if (!isBottomBarExpanded && currentDestinationId != R.id.clinicsFragment) {
+                isBottomBarExpanded = true
+                currentDestinationId?.let { destinationId -> updateBottomNavSelection(destinationId) }
+            }
+        }
+
+        configureBottomBarSwipeCollapse()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun configureBottomBarSwipeCollapse() {
+        val swipeTouchListener = android.view.View.OnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    bottomBarTouchStartX = event.rawX
+                    bottomBarTouchStartY = event.rawY
+                    false
                 }
-                R.id.objLibraryFragment -> {
-                    navController.popBackStack(R.id.clinicsFragment, false)
-                    navController.navigate(R.id.objLibraryFragment)
-                    true
+
+                MotionEvent.ACTION_UP -> {
+                    val deltaX = event.rawX - bottomBarTouchStartX
+                    val deltaY = event.rawY - bottomBarTouchStartY
+                    val swipeThreshold = 40 * resources.displayMetrics.density
+                    if (
+                        isBottomBarExpanded &&
+                        currentDestinationId != R.id.clinicsFragment &&
+                        deltaX > swipeThreshold &&
+                        abs(deltaX) > abs(deltaY)
+                    ) {
+                        collapseBottomBar()
+                        true
+                    } else {
+                        false
+                    }
                 }
-                R.id.myAccountFragment -> {
-                    navController.popBackStack(R.id.clinicsFragment, false)
-                    navController.navigate(R.id.myAccountFragment)
-                    true
-                }
+
                 else -> false
             }
+        }
+
+        listOf(
+            binding.bottomNavigationCard,
+            binding.bottomNavigationContent,
+            binding.clinicsNavItem,
+            binding.libraryNavItem,
+            binding.accountNavItem,
+            binding.addNavItem
+        ).forEach { view ->
+            view.setOnTouchListener(swipeTouchListener)
+        }
+    }
+
+    private fun collapseBottomBar() {
+        isBottomBarExpanded = false
+        currentDestinationId?.let { destinationId -> updateBottomNavSelection(destinationId) }
+    }
+
+    private fun configureSystemBars() {
+        window.statusBarColor = ContextCompat.getColor(this, R.color.toolbarTeal)
+        window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+    }
+
+    private fun tintToolbarNavigationIcon() {
+        val navigationIcon = binding.toolbar.navigationIcon ?: return
+        val wrappedIcon = DrawableCompat.wrap(navigationIcon.mutate())
+        DrawableCompat.setTint(wrappedIcon, ContextCompat.getColor(this, android.R.color.white))
+        binding.toolbar.navigationIcon = wrappedIcon
+    }
+
+    private fun updateBottomNavSelection(destinationId: Int) {
+        val selectedColor = ContextCompat.getColor(this, R.color.toolbarTeal)
+        val inactiveColor = ContextCompat.getColor(this, R.color.bottomNavInactive)
+        val clinicsSelected = destinationId == R.id.clinicsFragment
+        val librarySelected = destinationId == R.id.objLibraryFragment
+        val accountSelected = destinationId == R.id.myAccountFragment
+        val addAvailable = destinationId == R.id.clinicsFragment ||
+            destinationId == R.id.kidsFragment ||
+            destinationId == R.id.objectivesFragment ||
+            destinationId == R.id.objLibraryFragment ||
+            destinationId == R.id.objItemLibraryFragment ||
+            destinationId == R.id.therapistsFragment
+        val addVisible = addOverrideVisible ?: addAvailable
+        val showExpandedBar = destinationId == R.id.clinicsFragment || isBottomBarExpanded
+
+        binding.clinicsNavIcon.setColorFilter(if (clinicsSelected) selectedColor else inactiveColor)
+        binding.clinicsNavText.setTextColor(if (clinicsSelected) selectedColor else inactiveColor)
+        binding.libraryNavIcon.setColorFilter(if (librarySelected) selectedColor else inactiveColor)
+        binding.libraryNavText.setTextColor(if (librarySelected) selectedColor else inactiveColor)
+        binding.accountNavIcon.setColorFilter(if (accountSelected) selectedColor else inactiveColor)
+        binding.accountNavText.setTextColor(if (accountSelected) selectedColor else inactiveColor)
+        binding.addNavIcon.setColorFilter(selectedColor)
+        binding.addNavText.setTextColor(selectedColor)
+        binding.bottomNavigationContent.isVisible = showExpandedBar
+        binding.collapsedNavDot.isVisible = !showExpandedBar
+        binding.clinicsNavItem.isVisible = showExpandedBar
+        binding.libraryNavItem.isVisible = showExpandedBar
+        binding.accountNavItem.isVisible = showExpandedBar
+        binding.addNavItem.isVisible = showExpandedBar && addVisible
+        binding.addNavSeparator.isVisible = showExpandedBar && addVisible
+        resizeBottomBar(expanded = showExpandedBar)
+    }
+
+    private fun resizeBottomBar(expanded: Boolean) {
+        val targetWidth = if (expanded) 312 else 64
+        val density = resources.displayMetrics.density
+        val params = binding.bottomNavigationCard.layoutParams
+        val targetWidthPx = (targetWidth * density).toInt()
+        if (params.width != targetWidthPx) {
+            params.width = targetWidthPx
+            binding.bottomNavigationCard.layoutParams = params
         }
     }
 
@@ -113,11 +257,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleAuthStatusUpdated(isLoggedIn: Boolean) {
         setupNavigation(isLoggedIn)
-        binding.bottomNavigationView.menu.findItem(R.id.objLibraryFragment).isVisible = true
     }
 
     fun updateBottomNav() {
         viewModel.takeAction(MainAction.UpdateAuthStatus)
+    }
+
+    fun setBottomAddVisible(isVisible: Boolean) {
+        addOverrideVisible = isVisible
+        currentDestinationId?.let { destinationId -> updateBottomNavSelection(destinationId) }
     }
 
     private fun setupNetworkStatus() {
@@ -132,7 +280,11 @@ class MainActivity : AppCompatActivity() {
             capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 
         runOnUiThread {
-            binding.offlineInfoTextView.isVisible = !hasValidatedInternet
+            val isOffline = !hasValidatedInternet
+            val isAuthDestination = currentDestinationId == R.id.loginFragment ||
+                currentDestinationId == R.id.registerFragment
+            binding.offlineInfoTextView.isVisible = isOffline && !isAuthDestination
+            binding.authOfflineInfoTextView.isVisible = isOffline && isAuthDestination
         }
     }
 }

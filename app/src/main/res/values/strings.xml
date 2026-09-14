@@ -8,13 +8,20 @@
     <string name="loading_please_wait">Loading, please wait…</string>
     <string name="msg_invalid_number_selected">You must enter a valid integer</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="clinic_title">Clinic: %s</string>
+    <string name="objectives">Objectives</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="feedback">Feedback</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="feedback_hint">Tell us what can be improved</string>
+    <string name="feedback_sent">Feedback sent</string>
     <string name="objective_kids">Kids</string>
     <string name="objective_kids_dialog_title">Kids using this objective</string>
     <string name="objective_kids_empty">No kids are using this objective.</string>
     <string name="unknown_clinic">Unknown clinic</string>
 
-    <string name="item_last_answer">Last Answer: &lt;b&gt;%s&lt;/b&gt; on &lt;b&gt;%s&lt;/b&gt;</string>
-    <string name="item_by_therapist">By therapist: &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="item_last_answer">Last Answer: &lt;b&gt;%1$s&lt;/b&gt; on &lt;b&gt;%2$s&lt;/b&gt;</string>
+    <string name="item_by_therapist">By therapist: &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="objective_was_created">Objective %1$s was created.</string>
 
     <string name="objective_was_added">Objective %1$s was added.</string>

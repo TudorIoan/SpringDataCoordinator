@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import app.springdata.coordinator.view.main.MainActivity
 
 open class BaseFragment : Fragment() {
@@ -49,14 +48,21 @@ open class BaseFragment : Fragment() {
     fun hideBottomBar() {
         val activity = requireActivity()
         if (activity is MainActivity) {
-            activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.isVisible = false
+            activity.findViewById<View>(R.id.bottomNavigationCard)?.isVisible = false
         }
     }
 
     fun showBottomBar() {
         val activity = requireActivity()
         if (activity is MainActivity) {
-            activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.isVisible = true
+            activity.findViewById<View>(R.id.bottomNavigationCard)?.isVisible = true
+        }
+    }
+
+    fun setBottomAddVisible(isVisible: Boolean) {
+        val activity = requireActivity()
+        if (activity is MainActivity) {
+            activity.setBottomAddVisible(isVisible)
         }
     }
 

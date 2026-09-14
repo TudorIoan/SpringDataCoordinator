@@ -91,6 +91,7 @@ class      ItemsFragment : BaseFragment() {
 
     private fun configureViews() {
         showBottomBar()
+        configureEmptyState()
 
         itemsAdapter = ItemsAdapter(
             onYesClicked = { item ->
@@ -127,12 +128,20 @@ class      ItemsFragment : BaseFragment() {
 
     private fun handleContentLoaded(items: List<KidObjectiveItem>) {
         itemsAdapter.updateData(items)
+        binding.itemsRecyclerView.isVisible = items.isNotEmpty()
+        binding.emptyStateInclude.emptyStateView.isVisible = items.isEmpty()
 
         val allFrequency = items.isNotEmpty() && items.all { it.objItem.type == ObjItemType.FREQUENCY }
 
         if (allFrequency) {
             showChartMenu()
         }
+    }
+
+    private fun configureEmptyState() {
+        binding.emptyStateInclude.emptyTitleTextView.text = "No items yet"
+        binding.emptyStateInclude.emptyMessageTextView.text =
+            "Add items to this objective from the objective library."
     }
 
     private fun showChartMenu() {
@@ -157,6 +166,7 @@ class      ItemsFragment : BaseFragment() {
     private fun showError(generalError: String) {
         binding.subtitleInclude.errorTextView.text = generalError
         binding.subtitleInclude.errorTextView.visibility = View.VISIBLE
+        binding.emptyStateInclude.emptyStateView.isVisible = false
     }
 
     private fun navigateToObjectives() {

@@ -71,11 +71,14 @@ class KidsFragment : BaseFragment() {
         viewModel.title.observe(viewLifecycleOwner) { title ->
             binding.subtitleInclude.subtitleTextView.isVisible = true
             binding.subtitleInclude.subtitleTextView.text = title
+                .removePrefix("Clinic:")
+                .trimStart()
         }
     }
 
     private fun configureViews() {
         showBottomBar()
+        configureEmptyState()
 
         kidsAdapter = KidsAdapter(
             onItemClicked = { kid ->
@@ -94,15 +97,19 @@ class KidsFragment : BaseFragment() {
             adapter = kidsAdapter
         }
 
-        binding.fabAddKid.setOnClickListener {
-            findNavController().navigate(R.id.addKidFragment)
-        }
-        binding.fabAddKid.isVisible = true
     }
 
     private fun handleContentLoaded(kids: List<Kid>) {
         kidsAdapter.updateData(kids)
+        binding.kidsRecyclerView.isVisible = kids.isNotEmpty()
+        binding.emptyStateInclude.emptyStateView.isVisible = kids.isEmpty()
         addMenuButtons()
+    }
+
+    private fun configureEmptyState() {
+        binding.emptyStateInclude.emptyTitleTextView.text = "No kids yet"
+        binding.emptyStateInclude.emptyMessageTextView.text =
+            "Add kids to this clinic and their objectives will appear here."
     }
 
     private fun addMenuButtons() {
@@ -131,6 +138,7 @@ class KidsFragment : BaseFragment() {
     private fun showError(generalError: String) {
         binding.subtitleInclude.errorTextView.text = generalError
         binding.subtitleInclude.errorTextView.visibility = View.VISIBLE
+        binding.emptyStateInclude.emptyStateView.isVisible = false
     }
 
     private fun navigateToObjectives() {

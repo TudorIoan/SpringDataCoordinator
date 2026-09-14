@@ -2,46 +2,84 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/toolbarTeal">
 
     <TextView
         android:id="@+id/subtitleTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#eeeeee"
-        android:padding="20dp"
-        android:textColor="#aaaaaa"
-        android:textSize="20sp"
+        android:background="@drawable/bg_subtitle_band"
+        android:includeFontPadding="false"
+        android:paddingStart="28dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="28dp"
+        android:paddingBottom="11dp"
+        android:shadowColor="#40BDAF"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="0.6"
+        android:textColor="@color/toolbarTextMuted"
+        android:textSize="16sp"
         android:visibility="gone"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/separator"
-        />
-
-    <View
-        android:id="@+id/separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#888888"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
-        app:layout_constraintBottom_toTopOf="@id/errorTextView"
         />
 
     <TextView
-        android:id="@+id/errorTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/sectionTitleTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text=""
-        android:textColor="#ff0000"
-        android:textSize="18sp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="28dp"
+        android:includeFontPadding="false"
+        android:paddingBottom="16dp"
+        android:shadowColor="#2B8F84"
+        android:shadowDx="0"
+        android:shadowDy="2"
+        android:shadowRadius="0.8"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/separator"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitleTextView" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/contentBottomBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="subtitleTextView,sectionTitleTextView,errorTextView" />
+
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/toolbarTealOutlineDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contentBottomBarrier"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="28dp"
+        android:text=""
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sectionTitleTextView"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

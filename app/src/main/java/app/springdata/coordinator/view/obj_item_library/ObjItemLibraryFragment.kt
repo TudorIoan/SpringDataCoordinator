@@ -96,9 +96,6 @@ class ObjItemLibraryFragment : BaseFragment() {
             adapter = objItemsAdapter
         }
 
-        binding.fabAddItem.setOnClickListener {
-            findNavController().navigate(R.id.addObjItemFragment)
-        }
     }
 
     private fun addMenuButtons() {

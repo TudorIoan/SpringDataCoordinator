@@ -5,5 +5,34 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="green">#32a852</color>
-    <color name="offlineRed">#B3261E</color>
+    <color name="offlineRed">#D7726B</color>
+    <color name="offlineRedInset">#C8655F</color>
+    <color name="offlineRedOutlineDark">#B15853</color>
+    <color name="offlineRedText">#FFF0EE</color>
+    <color name="offlineRedTextShadow">#82312D</color>
+    <color name="toolbarTeal">#39B8A8</color>
+    <color name="toolbarTealDark">#2A9F91</color>
+    <color name="loginTitleEngraved">#1F766D</color>
+    <color name="toolbarTealInset">#319D91</color>
+    <color name="toolbarTealOutlineDark">#30988C</color>
+    <color name="toolbarTextMuted">#236B64</color>
+    <color name="clinicScreenBackground">#F8F5FA</color>
+    <color name="clinicCardBackground">#FFFFFF</color>
+    <color name="clinicCardStroke">#ECE7EF</color>
+    <color name="itemInitialsBackground">#EEF1F3</color>
+    <color name="clinicTitleText">#3A3444</color>
+    <color name="clinicMetaText">#7B8791</color>
+    <color name="clinicChevronText">#9AA7B0</color>
+    <color name="clinicChevronTextLight">#B4BEC5</color>
+    <color name="bottomNavInactive">#A8B3BD</color>
+    <color name="objectiveGroupHeaderBackground">#EEF1F3</color>
+    <color name="objectiveGroupHeaderText">#48535A</color>
+    <color name="objectiveGroupItemBackground">#FFFFFF</color>
+    <color name="objectiveGroupDivider">#E9EFEC</color>
+    <color name="objectiveLevelYellow">#F1A208</color>
+    <color name="itemInputBackground">#FFFFFF</color>
+    <color name="itemInputStroke">#D9E0E3</color>
+    <color name="itemYesGreen">#54A866</color>
+    <color name="itemNoRed">#D75B55</color>
+    <color name="itemSetBlue">#35B8A8</color>
 </resources>

@@ -4,8 +4,10 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import app.springdata.coordinator.R
 import app.springdata.coordinator.databinding.ObjectiveItemBinding
 import app.springdata.coordinator.databinding.ObjectiveTypeItemBinding
 import app.springdata.coordinator.model.KidObjective
@@ -44,6 +46,20 @@ class ObjectivesAdapter(
 
         override fun bind(item: ObjectivesListItem.ObjectiveTypeItem) {
             binding.textView.text = item.objectiveType.displayName
+            binding.root.setBackgroundResource(
+                if (item.expanded) {
+                    R.drawable.bg_objective_type_expanded
+                } else {
+                    R.drawable.bg_objective_type_collapsed
+                }
+            )
+            binding.chevronView.setImageResource(
+                if (item.expanded) {
+                    R.drawable.ic_chevron_up
+                } else {
+                    R.drawable.ic_chevron_down
+                }
+            )
 
             // Set level label text and background color
             binding.levelLabel.text = item.objectiveType.level.displayName.uppercase()
@@ -52,7 +68,7 @@ class ObjectivesAdapter(
             // Create rounded background with appropriate color
             val backgroundDrawable = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                cornerRadius = 8f
+                cornerRadius = 5f * binding.root.resources.displayMetrics.density
                 setColor(getLevelBackgroundColor(item.objectiveType.level))
             }
             binding.levelLabel.background = backgroundDrawable
@@ -65,7 +81,7 @@ class ObjectivesAdapter(
         private fun getLevelBackgroundColor(level: ObjLevel): Int {
             return when (level) {
                 ObjLevel.BEGINNER -> 0xFF4CAF50.toInt() // Green
-                ObjLevel.INTERMEDIATE -> 0xFFe3dc12.toInt() // Darker shade of yellow
+                ObjLevel.INTERMEDIATE -> ContextCompat.getColor(binding.root.context, R.color.objectiveLevelYellow)
                 ObjLevel.ADVANCED -> 0xFF2196F3.toInt() // Blue
             }
         }
@@ -80,11 +96,23 @@ class ObjectivesAdapter(
         private val onItemEdit: (KidObjective, String) -> Unit
     ) : BaseViewHolder<ObjectivesListItem.ObjectiveItem>(binding.root) {
 
-        override fun bind(item: ObjectivesListItem.ObjectiveItem) {
-            binding.nameView.text = item.objectiveName
+        override fun bind(item: ObjectivesListItem.ObjectiveItem) = bind(item, isLastInGroup = true)
 
-            binding.activeToggle.isVisible = true
-            binding.objectiveReportView.isVisible = item.kidObjective.active
+        fun bind(item: ObjectivesListItem.ObjectiveItem, isLastInGroup: Boolean) {
+            binding.nameView.text = item.objectiveName
+            binding.root.setBackgroundResource(
+                if (isLastInGroup) {
+                    R.drawable.bg_objective_item_last
+                } else {
+                    R.drawable.bg_objective_item_middle
+                }
+            )
+            binding.separator.isVisible = !isLastInGroup
+
+            // These controls are not part of the compact objective row. Keeping them
+            // GONE prevents their widget minimum sizes from affecting row measurement.
+            binding.activeToggle.isVisible = false
+            binding.objectiveReportView.isVisible = false
             binding.activeToggle.setOnCheckedChangeListener(null)
             binding.activeToggle.isChecked = item.kidObjective.active
 
@@ -101,8 +129,8 @@ class ObjectivesAdapter(
                     onItemClicked(item)
                 } else {
                     binding.buttonsLayout.root.isVisible = false
-                    binding.activeToggle.isVisible = true
-                    binding.objectiveReportView.isVisible = item.kidObjective.active
+                    binding.activeToggle.isVisible = false
+                    binding.objectiveReportView.isVisible = false
                 }
             }
 
@@ -133,17 +161,12 @@ class ObjectivesAdapter(
 
             editView.setOnClickListener {
                 binding.buttonsLayout.root.isVisible = false
-                binding.activeToggle.isVisible = true
-                binding.objectiveReportView.isVisible = item.kidObjective.active
+                binding.activeToggle.isVisible = false
+                binding.objectiveReportView.isVisible = false
                 onItemEdit(item.kidObjective, item.objectiveName)
             }
 
-            // Gray out objective with all items mastered
-            if (item.kidObjective.active && item.kidObjective.itemsList.all { it.mastered }) {
-                binding.root.alpha = 0.5f
-            } else {
-                binding.root.alpha = 1.0f
-            }
+            binding.root.alpha = 1.0f
         }
     }
 
@@ -173,11 +196,19 @@ class ObjectivesAdapter(
         val item = items[position]
         when (holder) {
             is ObjectiveTypeViewHolder -> holder.bind(item as ObjectivesListItem.ObjectiveTypeItem)
-            is ObjectiveViewHolder -> holder.bind(item as ObjectivesListItem.ObjectiveItem)
+            is ObjectiveViewHolder -> holder.bind(
+                item as ObjectivesListItem.ObjectiveItem,
+                isLastInGroup = isLastObjectiveInGroup(position, item)
+            )
         }
     }
 
     override fun getItemCount() = items.size
+
+    private fun isLastObjectiveInGroup(position: Int, item: ObjectivesListItem.ObjectiveItem): Boolean {
+        val nextItem = items.getOrNull(position + 1)
+        return nextItem !is ObjectivesListItem.ObjectiveItem || nextItem.objectiveType != item.objectiveType
+    }
 
     companion object {
         private const val VIEW_TYPE_TYPE = 1

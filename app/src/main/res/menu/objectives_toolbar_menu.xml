@@ -6,6 +6,7 @@
         android:id="@+id/action_therapists"
         android:icon="@drawable/ic_therapists"
         android:title="Therapists"
+        app:iconTint="@android:color/white"
         app:showAsAction="always" />
 
 </menu>

@@ -107,11 +107,6 @@ class ObjLibraryFragment : BaseFragment() {
             adapter = objLibraryAdapter
         }
 
-        binding.fabAddObjective.setOnClickListener {
-            viewModel.takeAction(ObjLibraryAction.AddObjectiveClicked)
-        }
-        binding.fabAddObjective.isVisible = true
-
         setupTabs()
         addMenuButtons()
     }

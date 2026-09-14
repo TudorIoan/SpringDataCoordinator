@@ -3,4 +3,5 @@ package app.springdata.coordinator.view.login
 sealed class LoginAction {
     object Start : LoginAction()
     class LoginClicked(val email: String, val password: String) : LoginAction()
+    class ForgotPasswordClicked(val email: String) : LoginAction()
 }
