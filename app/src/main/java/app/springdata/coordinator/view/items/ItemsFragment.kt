@@ -1,6 +1,10 @@
 package app.springdata.coordinator.view.items
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.style.MetricAffectingSpan
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,6 +29,16 @@ import app.springdata.coordinator.databinding.DialogFrequencyProgressBinding
 import app.springdata.coordinator.databinding.FragmentItemsBinding
 import app.springdata.coordinator.model.KidObjectiveItem
 import app.springdata.coordinator.model.ObjItemType
+
+private class ArrowBaselineSpan(private val shift: Int) : MetricAffectingSpan() {
+    override fun updateDrawState(textPaint: TextPaint) {
+        textPaint.baselineShift += shift
+    }
+
+    override fun updateMeasureState(textPaint: TextPaint) {
+        textPaint.baselineShift += shift
+    }
+}
 
 @AndroidEntryPoint
 class      ItemsFragment : BaseFragment() {
@@ -85,7 +99,13 @@ class      ItemsFragment : BaseFragment() {
 
         viewModel.title.observe(viewLifecycleOwner) { title ->
             binding.subtitleInclude.subtitleTextView.isVisible = true
-            binding.subtitleInclude.subtitleTextView.text = title
+            val subtitle = SpannableString(title)
+            val arrowIndex = title.indexOf("→")
+            if (arrowIndex >= 0) {
+                val shift = -((1 * resources.displayMetrics.density).toInt())
+                subtitle.setSpan(ArrowBaselineSpan(shift), arrowIndex, arrowIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            binding.subtitleInclude.subtitleTextView.text = subtitle
         }
     }
 
@@ -94,29 +114,14 @@ class      ItemsFragment : BaseFragment() {
         configureEmptyState()
 
         itemsAdapter = ItemsAdapter(
-            onYesClicked = { item ->
-                viewModel.takeAction(ItemAction.ItemYesClicked(item))
-            },
-            onNoClicked = { item ->
-                viewModel.takeAction(ItemAction.ItemNoClicked(item))
-            },
             onToggleClicked = { item ->
                 viewModel.takeAction(ItemAction.ItemToggleClicked(item))
-            },
-            onFrequencySet = { item, freq, interval ->
-                viewModel.takeAction(ItemAction.FrequencySet(item, freq, interval))
-            },
-            onProgressSet = { item, progress ->
-                viewModel.takeAction(ItemAction.ProgressSet(item, progress))
             },
             onShowProgress = { item ->
                 showProgressDialog(item)
             },
             onSetMastered = { item ->
                 viewModel.takeAction(ItemAction.SetMastered(item))
-            },
-            onCheckmarkClicked = { item ->
-                viewModel.takeAction(ItemAction.CheckmarkClicked(item))
             }
         )
 

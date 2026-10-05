@@ -9,15 +9,15 @@
 
     <ImageView
         android:id="@+id/removeView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:src="@drawable/ic_remove"
         app:tint="#882222" />
 
     <ImageView
         android:id="@+id/editView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_marginStart="30dp"
         android:src="@drawable/ic_edit"
         app:tint="#029640" />

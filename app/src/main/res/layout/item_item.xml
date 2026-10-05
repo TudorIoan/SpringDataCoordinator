@@ -7,7 +7,6 @@
     android:layout_marginStart="16dp"
     android:layout_marginTop="12dp"
     android:layout_marginEnd="16dp"
-    android:layout_marginBottom="12dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -25,54 +24,83 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_item_header"
-            android:orientation="vertical">
+            android:background="@android:color/white"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
 
-            <TextView
-                android:id="@+id/itemNameView"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="12dp"
-                android:textColor="@color/clinicTitleText"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Item Name" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/itemTypeView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/clinicMetaText"
-                android:textSize="12sp"
-                tools:text="Item Type" />
+                <TextView
+                    android:id="@+id/itemNameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/clinicTitleText"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Item Name" />
 
-            <TextView
-                android:id="@+id/lastModificationView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/clinicMetaText"
-                android:textSize="12sp"
-                tools:text="Last answer: Yes on Mon 8 March" />
+                <TextView
+                    android:id="@+id/itemTypeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/clinicMetaText"
+                    android:textSize="12sp"
+                    tools:text="Item Type" />
 
-            <TextView
-                android:id="@+id/therapistView"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/lastModificationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/clinicMetaText"
+                    android:textSize="12sp"
+                    tools:text="Last answer: Yes on Mon 8 March" />
+
+                <TextView
+                    android:id="@+id/therapistView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/clinicMetaText"
+                    android:textSize="12sp"
+                    tools:text="By therapist: Tudor 1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="44dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="12dp"
-                android:textColor="@color/clinicMetaText"
-                android:textSize="12sp"
-                tools:text="By therapist: Tudor 1" />
+                android:layout_marginStart="8dp"
+                android:gravity="end"
+                android:orientation="vertical"
+                >
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:contentDescription="Activate item" />
+
+                <ImageView
+                    android:id="@+id/masteredImageView"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_check"
+                    android:visibility="gone"
+                    app:tint="#029640" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -84,277 +112,26 @@
             android:paddingStart="16dp"
             android:paddingTop="12dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="14dp">
-
-            <LinearLayout
-                android:id="@+id/yesNoButtonsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/yesButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_yes"
-                    android:backgroundTint="@color/itemYesGreen"
-                    app:backgroundTint="@color/itemYesGreen"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="YES"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/noButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_no"
-                    android:backgroundTint="@color/itemNoRed"
-                    app:backgroundTint="@color/itemNoRed"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="NO"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/frequencyInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <EditText
-                    android:id="@+id/frequencyEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_input"
-                    android:gravity="center"
-                    android:hint="0"
-                    android:includeFontPadding="false"
-                    android:inputType="number"
-                    android:paddingHorizontal="8dp"
-                    android:textColor="@color/clinicTitleText"
-                    android:textColorHint="#A7ADB2"
-                    android:textSize="13sp" />
-
-                <EditText
-                    android:id="@+id/frequencyIntervalEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_input"
-                    android:gravity="center"
-                    android:hint="min"
-                    android:includeFontPadding="false"
-                    android:inputType="number"
-                    android:paddingHorizontal="8dp"
-                    android:textColor="@color/clinicTitleText"
-                    android:textColorHint="#A7ADB2"
-                    android:textSize="13sp" />
-
-                <Button
-                    android:id="@+id/setButton"
-                    android:layout_width="78dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_button_set_blue"
-                    android:backgroundTint="@color/itemSetBlue"
-                    app:backgroundTint="@color/itemSetBlue"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="SET"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/percentageInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_input"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp">
-
-                    <EditText
-                        android:id="@+id/percentageEditText"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:gravity="center"
-                        android:hint="0-100"
-                        android:includeFontPadding="false"
-                        android:inputType="number"
-                        android:padding="0dp"
-                        android:textColor="@color/clinicTitleText"
-                        android:textColorHint="#A7ADB2"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="%"
-                        android:textColor="@color/clinicTitleText"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/setPercentageButton"
-                    android:layout_width="78dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_button_set_blue"
-                    android:backgroundTint="@color/itemSetBlue"
-                    app:backgroundTint="@color/itemSetBlue"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="SET"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            android:paddingBottom="14dp"
+            android:visibility="gone">
 
             <Button
-                android:id="@+id/checkmarkYesButton"
+                android:id="@+id/setMasteredButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_button_yes"
                 android:backgroundTint="@color/itemYesGreen"
-                app:backgroundTint="@color/itemYesGreen"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:paddingHorizontal="12dp"
                 android:stateListAnimator="@null"
-                android:text="CHECK"
+                android:text="Set Mastered"
                 android:textColor="@android:color/white"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/progressActionsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/showProgressButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_set_blue"
-                    android:backgroundTint="@color/itemSetBlue"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="Progress"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:backgroundTint="@color/itemSetBlue" />
-
-                <Button
-                    android:id="@+id/setMasteredButton"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_yes"
-                    android:backgroundTint="@color/itemYesGreen"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingHorizontal="12dp"
-                    android:stateListAnimator="@null"
-                    android:text="Set Mastered"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:backgroundTint="@color/itemYesGreen" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/activationSwitchLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end|center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/activationStatusLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Inactive"
-                    android:textColor="@color/clinicTitleText"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchToggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/masteredImageView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_check"
                 android:visibility="gone"
-                app:tint="#029640" />
+                app:backgroundTint="@color/itemYesGreen" />
 
-            <include
-                android:id="@+id/buttons_layout"
-                layout="@layout/view_item_buttons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:visibility="gone" />
 
         </FrameLayout>
 

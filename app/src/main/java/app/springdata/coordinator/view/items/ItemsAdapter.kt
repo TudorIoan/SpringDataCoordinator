@@ -4,26 +4,18 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import app.springdata.coordinator.R
 import app.springdata.coordinator.databinding.ItemItemBinding
 import app.springdata.coordinator.model.KidObjectiveItem
-import app.springdata.coordinator.model.ObjItemType
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ItemsAdapter(
     private val onToggleClicked: (KidObjectiveItem) -> Unit,
-    private val onYesClicked: (KidObjectiveItem) -> Unit,
-    private val onNoClicked: (KidObjectiveItem) -> Unit,
-    private val onFrequencySet: (KidObjectiveItem, Int, Int) -> Unit,
-    private val onProgressSet: (KidObjectiveItem, Int) -> Unit,
     private val onShowProgress: (KidObjectiveItem) -> Unit,
-    private val onSetMastered: (KidObjectiveItem) -> Unit,
-    private val onCheckmarkClicked: (KidObjectiveItem) -> Unit
+    private val onSetMastered: (KidObjectiveItem) -> Unit
 ) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
 
     private var items: MutableList<KidObjectiveItem> = mutableListOf()
@@ -50,23 +42,11 @@ class ItemsAdapter(
         holder.binding.itemTypeView.text = item.objItem.type.displayName
         holder.binding.itemTypeView.visibility = View.VISIBLE
 
-        // Show appropriate controls based on user type and item type
-        val isYesNoItem = item.objItem.type == ObjItemType.YES_NO
-        val isFrequencyItem = item.objItem.type == ObjItemType.FREQUENCY
-        val isCheckmarkItem = item.objItem.type == ObjItemType.CHECKMARK
-        val isPercentageItem = item.objItem.type == ObjItemType.PERCENTAGE
-
-        holder.binding.yesNoButtonsLayout.visibility = View.GONE
-        holder.binding.frequencyInputLayout.visibility = View.GONE
-        holder.binding.percentageInputLayout.visibility = View.GONE
-        holder.binding.checkmarkYesButton.visibility = View.GONE
-        holder.binding.showProgressButton.visibility = View.VISIBLE
         holder.binding.setMasteredButton.visibility = View.GONE
-        holder.binding.activationSwitchLayout.visibility = if (!item.mastered) View.VISIBLE else View.GONE
+        holder.binding.actionTray.visibility = View.GONE
         holder.binding.setMasteredButton.text = if (item.mastered) "Set Un-mastered" else "Set Mastered"
         holder.binding.switchToggle.visibility = if (!item.mastered) View.VISIBLE else View.GONE
         holder.binding.masteredImageView.visibility = if (item.mastered) View.VISIBLE else View.GONE
-        holder.binding.activationStatusLabel.text = if (item.active) "Active" else "Inactive"
 
         holder.binding.switchToggle.setOnCheckedChangeListener(null) // Prevent triggering listener
         holder.binding.switchToggle.isChecked = item.active
@@ -85,52 +65,19 @@ class ItemsAdapter(
         holder.binding.lastModificationView.isVisible = lastYesNo != null && lastResponseTime != null
         holder.binding.therapistView.isVisible = lastYesNo != null && lastResponseTime != null
 
-        holder.binding.yesButton.setOnClickListener {
-            onYesClicked(item)
-        }
-
-        holder.binding.noButton.setOnClickListener {
-            onNoClicked(item)
-        }
-
         holder.binding.switchToggle.setOnCheckedChangeListener { _, isChecked ->
             item.active = isChecked
-            holder.binding.activationStatusLabel.text = if (isChecked) "Active" else "Inactive"
             onToggleClicked(item)
         }
 
-        holder.binding.setButton.setOnClickListener {
-            val frequencyText = holder.binding.frequencyEditText.text.toString()
-            val frequency = frequencyText.toIntOrNull() ?: 0
-            val intervalText = holder.binding.frequencyIntervalEditText.text.toString()
-            val interval = intervalText.toIntOrNull() ?: 0
-            onFrequencySet(item, frequency, interval)
-        }
-
-        holder.binding.setPercentageButton.setOnClickListener {
-            val progressText = holder.binding.percentageEditText.text.toString()
-            val progress = progressText.toIntOrNull()?.coerceIn(0, 100) ?: 0
-            onProgressSet(item, progress)
-        }
-
-        holder.binding.showProgressButton.setOnClickListener {
-            onShowProgress(item)
-        }
 
         holder.binding.setMasteredButton.setOnClickListener {
             onSetMastered(item)
         }
 
-        holder.binding.checkmarkYesButton.setOnClickListener {
-            onCheckmarkClicked(item)
-        }
-
-        // Long click listener for non-mastered items (frequency, checkmark, progress, and yes/no)
+        // Long press exposes the Coordinator-only mastery action.
         holder.binding.root.setOnLongClickListener {
-            holder.binding.switchToggle.visibility = View.GONE
-            holder.binding.activationSwitchLayout.visibility = View.GONE
-            holder.binding.showProgressButton.visibility = View.GONE
-            holder.binding.masteredImageView.visibility = View.GONE
+            holder.binding.actionTray.visibility = View.VISIBLE
             holder.binding.setMasteredButton.visibility = View.VISIBLE
             true
         }
@@ -140,15 +87,15 @@ class ItemsAdapter(
             if (holder.binding.setMasteredButton.isVisible) {
                 // Hide Set Mastered button and show normal controls
                 holder.binding.setMasteredButton.visibility = View.GONE
-                holder.binding.showProgressButton.visibility = View.VISIBLE
+                holder.binding.actionTray.visibility = View.GONE
                 if (item.mastered) {
                     holder.binding.masteredImageView.visibility = View.VISIBLE
                     holder.binding.switchToggle.visibility = View.GONE
-                    holder.binding.activationSwitchLayout.visibility = View.GONE
                 } else {
                     holder.binding.switchToggle.visibility = View.VISIBLE
-                    holder.binding.activationSwitchLayout.visibility = View.VISIBLE
                 }
+            } else {
+                onShowProgress(item)
             }
         }
 

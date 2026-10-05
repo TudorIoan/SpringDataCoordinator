@@ -12,22 +12,55 @@
     android:focusable="true"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/nameView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|start"
-        android:includeFontPadding="false"
-        android:lineSpacingExtra="2dp"
+        android:gravity="center_vertical"
         android:minHeight="54dp"
+        android:orientation="horizontal"
         android:paddingStart="18dp"
-        android:paddingTop="15dp"
-        android:paddingEnd="18dp"
-        android:paddingBottom="15dp"
-        android:textColor="@color/clinicTitleText"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="Citește propoziții și răspunde la întrebări simple" />
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/nameView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="2dp"
+            android:textColor="@color/clinicTitleText"
+            android:textSize="16sp"
+            tools:text="Citește propoziții și răspunde la întrebări simple" />
+
+        <ImageView
+            android:id="@+id/objectiveReportView"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="6dp"
+            android:contentDescription="Objective report"
+            android:src="@drawable/ic_report"
+            android:visibility="gone"
+            app:tint="#0474BF" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/activeToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:contentDescription="Activate objective"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/buttons_layout"
+            layout="@layout/view_item_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <View
         android:id="@+id/separator"
@@ -38,22 +71,4 @@
         android:background="@color/objectiveGroupDivider"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/objectiveReportView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/activeToggle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/buttons_layout"
-        layout="@layout/view_item_buttons"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
 </LinearLayout>

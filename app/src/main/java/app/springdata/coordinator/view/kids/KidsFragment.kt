@@ -70,9 +70,8 @@ class KidsFragment : BaseFragment() {
 
         viewModel.title.observe(viewLifecycleOwner) { title ->
             binding.subtitleInclude.subtitleTextView.isVisible = true
-            binding.subtitleInclude.subtitleTextView.text = title
-                .removePrefix("Clinic:")
-                .trimStart()
+            binding.subtitleInclude.subtitleTextView.text =
+                getString(R.string.clinic_title, title)
         }
     }
 

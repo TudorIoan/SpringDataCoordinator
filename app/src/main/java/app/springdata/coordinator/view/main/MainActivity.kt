@@ -11,7 +11,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         configureSystemBars()
+        configureBottomNavigationInsets()
         observeData(viewModel)
         setupNetworkStatus()
         viewModel.takeAction(MainAction.Start)
@@ -186,6 +189,18 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.toolbarTeal)
         window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+    }
+
+    private fun configureBottomNavigationInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationCard) { view, insets ->
+            val navigationBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            val spacing = (20 * resources.displayMetrics.density).toInt()
+            val params = view.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+            params.bottomMargin = navigationBottom + spacing
+            view.layoutParams = params
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.bottomNavigationCard)
     }
 
     private fun tintToolbarNavigationIcon() {

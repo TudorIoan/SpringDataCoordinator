@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import app.springdata.coordinator.model.FrequencyItem
-import app.springdata.coordinator.model.ProgressItem
 import app.springdata.coordinator.model.KidObjectiveItem
-import app.springdata.coordinator.model.YesNoItem
 import app.springdata.coordinator.repo.KidObjectiveRepository
 import app.springdata.coordinator.repo.ObjectiveRepository
 import app.springdata.coordinator.repo.OrgRepository
@@ -44,13 +41,8 @@ class ItemsViewModel @Inject constructor(
                 handleToggleClicked(action.item)
             }
 
-            is ItemAction.ItemYesClicked -> handleYesClicked(action.item)
-            is ItemAction.ItemNoClicked -> handleNoClicked(action.item)
             is ItemAction.RemoveItem -> handleRemoveItem(action.item)
-            is ItemAction.FrequencySet -> handleFrequencySet(action.item, action.frequency, action.interval)
-            is ItemAction.ProgressSet -> handleProgressSet(action.item, action.progress)
             is ItemAction.SetMastered -> handleSetMastered(action.item)
-            is ItemAction.CheckmarkClicked -> handleCheckmarkClicked(action.item)
         }
 
     }
@@ -61,7 +53,7 @@ class ItemsViewModel @Inject constructor(
 
     private fun handleStart() {
         _title.value =
-            "${orgRepo.requireSelectedClinic().name} > ${orgRepo.requireSelectedKid().name} > ${orgRepo.requireSelectedObjective().name}"
+            "${orgRepo.requireSelectedKid().name} → ${orgRepo.requireSelectedObjective().name}"
 
         updateItems()
     }
@@ -94,78 +86,6 @@ class ItemsViewModel @Inject constructor(
         }
     }
 
-    private fun handleYesClicked(item: KidObjectiveItem) {
-        update(ItemState.Loading)
-        item.yesNoList.add(YesNoItem(yes = true, date = Date()))
-        val consecutiveYesses = orgRepo.requireSelectedKidObjective().consecutiveYesses
-        if (consecutiveYesses != null) {
-            val recentEntries = item.yesNoList.takeLast(consecutiveYesses)
-            if (recentEntries.size >= consecutiveYesses && recentEntries.all { it.yes }) {
-                item.mastered = true
-            }
-        }
-        if (item.firstResponseTime == null) item.firstResponseTime = Date()
-        item.lastResponseTime = Date()
-        item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
-        viewModelScope.launch {
-            val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
-            result.onSuccess {
-                updateItems()
-            }.onFailure { exception ->
-                update(ItemState.Error(exception.message ?: "Error"))
-            }
-        }
-    }
-
-    private fun handleNoClicked(item: KidObjectiveItem) {
-        update(ItemState.Loading)
-        item.yesNoList.add(YesNoItem(yes = false, date = Date()))
-        item.lastResponseTime = Date()
-        if (item.firstResponseTime == null) item.firstResponseTime = Date()
-        item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
-        viewModelScope.launch {
-            val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
-            result.onSuccess {
-                updateItems()
-            }.onFailure { exception ->
-                update(ItemState.Error(exception.message ?: "Error"))
-            }
-        }
-    }
-
-    private fun handleFrequencySet(item: KidObjectiveItem, frequency: Int, interval: Int) {
-        update(ItemState.Loading)
-        item.lastResponseTime = Date()
-        if (item.firstResponseTime == null) item.firstResponseTime = Date()
-        item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
-        item.frequencyList.add(FrequencyItem(frequency, interval, Date()))
-        viewModelScope.launch {
-            val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
-            result.onSuccess {
-                updateItems()
-            }.onFailure { exception ->
-                update(ItemState.Error(exception.message ?: "Error"))
-            }
-        }
-    }
-
-    private fun handleProgressSet(item: KidObjectiveItem, progress: Int) {
-        update(ItemState.Loading)
-        item.lastResponseTime = Date()
-        if (item.firstResponseTime == null) item.firstResponseTime = Date()
-        item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
-        item.percentageList.add(ProgressItem(progress, Date()))
-
-        viewModelScope.launch {
-            val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
-            result.onSuccess {
-                updateItems()
-            }.onFailure { exception ->
-                update(ItemState.Error(exception.message ?: "Error"))
-            }
-        }
-    }
-
     private fun handleSetMastered(item: KidObjectiveItem) {
         update(ItemState.Loading)
         item.mastered = !item.mastered
@@ -175,22 +95,6 @@ class ItemsViewModel @Inject constructor(
             item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
         }
 
-        viewModelScope.launch {
-            val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
-            result.onSuccess {
-                updateItems()
-            }.onFailure { exception ->
-                update(ItemState.Error(exception.message ?: "Error"))
-            }
-        }
-    }
-
-    private fun handleCheckmarkClicked(item: KidObjectiveItem) {
-        update(ItemState.Loading)
-        item.checkmarkList.add(Date())
-        item.lastResponseTime = Date()
-        if (item.firstResponseTime == null) item.firstResponseTime = Date()
-        item.lastModificationByUserId = userRepo.requireUserDetails().ownerUid
         viewModelScope.launch {
             val result = kidObjectiveRepo.updateKidObjective(orgRepo.requireSelectedKidObjective())
             result.onSuccess {

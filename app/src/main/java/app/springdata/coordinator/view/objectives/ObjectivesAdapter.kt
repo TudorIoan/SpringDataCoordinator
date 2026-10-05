@@ -109,10 +109,8 @@ class ObjectivesAdapter(
             )
             binding.separator.isVisible = !isLastInGroup
 
-            // These controls are not part of the compact objective row. Keeping them
-            // GONE prevents their widget minimum sizes from affecting row measurement.
-            binding.activeToggle.isVisible = false
-            binding.objectiveReportView.isVisible = false
+            binding.activeToggle.isVisible = true
+            binding.objectiveReportView.isVisible = true
             binding.activeToggle.setOnCheckedChangeListener(null)
             binding.activeToggle.isChecked = item.kidObjective.active
 
@@ -129,8 +127,8 @@ class ObjectivesAdapter(
                     onItemClicked(item)
                 } else {
                     binding.buttonsLayout.root.isVisible = false
-                    binding.activeToggle.isVisible = false
-                    binding.objectiveReportView.isVisible = false
+                    binding.activeToggle.isVisible = true
+                    binding.objectiveReportView.isVisible = true
                 }
             }
 
@@ -161,8 +159,8 @@ class ObjectivesAdapter(
 
             editView.setOnClickListener {
                 binding.buttonsLayout.root.isVisible = false
-                binding.activeToggle.isVisible = false
-                binding.objectiveReportView.isVisible = false
+                binding.activeToggle.isVisible = true
+                binding.objectiveReportView.isVisible = true
                 onItemEdit(item.kidObjective, item.objectiveName)
             }
 
