@@ -40,8 +40,13 @@ class TherapistViewModel @Inject constructor(
     }
 
     private fun handleStart() {
-        _title.value = orgRepo.requireSelectedClinic().name
-        val isClinic = orgRepo.getSelectedKid() == null
+        val selectedKid = orgRepo.getSelectedKid()
+        _title.value = if (selectedKid == null) {
+            "All therapists in clinic: ${orgRepo.requireSelectedClinic().name}"
+        } else {
+            "Therapists that work with: ${selectedKid.name}"
+        }
+        val isClinic = selectedKid == null
 
         update(TherapistState.Loading)
         viewModelScope.launch {
