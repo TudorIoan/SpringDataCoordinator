@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
@@ -39,6 +42,16 @@ class MyAccountFragment : BaseFragment() {
     }
 
     private fun configureViews() {
+        val feedbackBottomSpacing = (binding.feedbackFab.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        ViewCompat.setOnApplyWindowInsetsListener(binding.feedbackFab) { view, insets ->
+            val navigationBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = feedbackBottomSpacing + navigationBottom
+            }
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.feedbackFab)
+
         binding.logoutButton.setOnClickListener {
             viewModel.takeAction(MyAccountAction.LogoutClicked)
         }
