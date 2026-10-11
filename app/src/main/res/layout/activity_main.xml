@@ -6,21 +6,21 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/toolbarTeal"
+        android:background="@color/slateIndigo"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/toolbarTeal"
+            android:background="@color/slateIndigo"
             android:fitsSystemWindows="true"
-            app:statusBarForeground="@color/toolbarTeal">
+            app:statusBarForeground="@color/slateIndigo">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/toolbarTeal"
+                android:background="@color/slateIndigo"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:theme="@style/ToolbarTheme"

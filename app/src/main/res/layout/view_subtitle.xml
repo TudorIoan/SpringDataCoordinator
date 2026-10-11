@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/toolbarTeal">
+    android:background="@color/slateIndigo">
 
     <TextView
         android:id="@+id/subtitleTextView"
@@ -15,7 +15,7 @@
         android:paddingTop="9dp"
         android:paddingEnd="28dp"
         android:paddingBottom="11dp"
-        android:shadowColor="#40BDAF"
+        android:shadowColor="@color/subtitleBandHighlight"
         android:shadowDx="0"
         android:shadowDy="1"
         android:shadowRadius="0.6"
@@ -37,7 +37,7 @@
         android:layout_marginEnd="28dp"
         android:includeFontPadding="false"
         android:paddingBottom="16dp"
-        android:shadowColor="#2B8F84"
+        android:shadowColor="@color/toolbarTitleShadow"
         android:shadowDx="0"
         android:shadowDy="2"
         android:shadowRadius="0.8"
@@ -60,7 +60,7 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/toolbarTealOutlineDark"
+        android:background="@color/slateIndigoOutlineDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contentBottomBarrier"

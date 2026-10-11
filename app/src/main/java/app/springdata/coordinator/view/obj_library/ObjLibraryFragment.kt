@@ -145,6 +145,10 @@ class ObjLibraryFragment : BaseFragment() {
     }
 
     private fun handleContentLoaded(objectives: List<ObjLibraryListItem>, selectedLevel: ObjLevel) {
+        binding.emptyStateInclude.root.visibility = if (objectives.isEmpty()) View.VISIBLE else View.GONE
+        binding.emptyStateInclude.emptyTitleTextView.text = "No objectives yet"
+        binding.emptyStateInclude.emptyMessageTextView.text =
+            "Objectives added to the ${selectedLevel.displayName.lowercase()} level will appear here."
         objLibraryAdapter.set(objectives)
         updateSelectedTab(selectedLevel)
     }

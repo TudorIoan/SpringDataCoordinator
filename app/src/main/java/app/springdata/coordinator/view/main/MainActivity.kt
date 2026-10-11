@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureSystemBars() {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.toolbarTeal)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.slateIndigo)
         window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
     }
@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateBottomNavSelection(destinationId: Int) {
-        val selectedColor = ContextCompat.getColor(this, R.color.toolbarTeal)
+        val selectedColor = ContextCompat.getColor(this, R.color.slateIndigo)
         val inactiveColor = ContextCompat.getColor(this, R.color.bottomNavInactive)
         val clinicsSelected = destinationId == R.id.clinicsFragment
         val librarySelected = destinationId == R.id.objLibraryFragment

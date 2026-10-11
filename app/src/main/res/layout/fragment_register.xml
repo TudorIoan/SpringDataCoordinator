@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/toolbarTeal"
+        android:background="@color/slateIndigo"
         android:clipChildren="false"
         android:clipToPadding="false"
         tools:context="app.springdata.coordinator.view.register.RegisterFragment">
@@ -54,7 +54,7 @@
                             android:layout_height="70dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_app_icon"
-                            app:tint="@color/toolbarTealDark" />
+                            app:tint="@color/slateIndigoDark" />
 
                         <ImageView
                             android:layout_width="70dp"
@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:shadowColor="@color/toolbarTealDark"
+                        android:shadowColor="@color/slateIndigoDark"
                         android:shadowDx="0"
                         android:shadowDy="-2"
                         android:shadowRadius="1"
@@ -146,8 +146,8 @@
                             app:boxCornerRadiusBottomStart="14dp"
                             app:boxCornerRadiusTopEnd="14dp"
                             app:boxCornerRadiusTopStart="14dp"
-                            app:boxStrokeColor="@color/toolbarTeal"
-                            app:hintTextColor="@color/toolbarTeal">
+                            app:boxStrokeColor="@color/slateIndigo"
+                            app:hintTextColor="@color/slateIndigo">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/nameEditText"
@@ -173,8 +173,8 @@
                             app:boxCornerRadiusBottomStart="14dp"
                             app:boxCornerRadiusTopEnd="14dp"
                             app:boxCornerRadiusTopStart="14dp"
-                            app:boxStrokeColor="@color/toolbarTeal"
-                            app:hintTextColor="@color/toolbarTeal">
+                            app:boxStrokeColor="@color/slateIndigo"
+                            app:hintTextColor="@color/slateIndigo">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/emailEditText"
@@ -200,10 +200,10 @@
                             app:boxCornerRadiusBottomStart="14dp"
                             app:boxCornerRadiusTopEnd="14dp"
                             app:boxCornerRadiusTopStart="14dp"
-                            app:boxStrokeColor="@color/toolbarTeal"
+                            app:boxStrokeColor="@color/slateIndigo"
                             app:endIconMode="password_toggle"
                             app:endIconTint="@color/clinicMetaText"
-                            app:hintTextColor="@color/toolbarTeal">
+                            app:hintTextColor="@color/slateIndigo">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/passwordEditText"
@@ -229,10 +229,10 @@
                             app:boxCornerRadiusBottomStart="14dp"
                             app:boxCornerRadiusTopEnd="14dp"
                             app:boxCornerRadiusTopStart="14dp"
-                            app:boxStrokeColor="@color/toolbarTeal"
+                            app:boxStrokeColor="@color/slateIndigo"
                             app:endIconMode="password_toggle"
                             app:endIconTint="@color/clinicMetaText"
-                            app:hintTextColor="@color/toolbarTeal">
+                            app:hintTextColor="@color/slateIndigo">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/confirmPasswordEditText"
@@ -251,7 +251,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="46dp"
                             android:layout_marginTop="16dp"
-                            android:backgroundTint="@color/toolbarTeal"
+                            android:backgroundTint="@color/slateIndigo"
                             android:text="Sign Up"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
@@ -267,7 +267,7 @@
                             android:layout_marginTop="6dp"
                             android:text="Already have an account? Log In"
                             android:textAllCaps="false"
-                            android:textColor="@color/toolbarTeal"
+                            android:textColor="@color/slateIndigo"
                             android:textSize="13sp"
                             />
 

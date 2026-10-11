@@ -210,8 +210,8 @@
                 app:boxCornerRadiusBottomStart="14dp"
                 app:boxCornerRadiusTopEnd="14dp"
                 app:boxCornerRadiusTopStart="14dp"
-                app:boxStrokeColor="@color/toolbarTeal"
-                app:hintTextColor="@color/toolbarTeal">
+                app:boxStrokeColor="@color/slateIndigo"
+                app:hintTextColor="@color/slateIndigo">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/feedbackEditText"
@@ -232,7 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="14dp"
-                        android:backgroundTint="@color/toolbarTeal"
+                        android:backgroundTint="@color/slateIndigo"
                         android:text="Send Feedback"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
@@ -256,7 +256,7 @@
         android:layout_marginBottom="102dp"
         android:contentDescription="Send feedback"
         android:src="@drawable/ic_feedback"
-        app:backgroundTint="@color/toolbarTeal"
+        app:backgroundTint="@color/slateIndigo"
         app:elevation="8dp"
         app:fabCustomSize="58dp"
         app:layout_constraintBottom_toBottomOf="parent"

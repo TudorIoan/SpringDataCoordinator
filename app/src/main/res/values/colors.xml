@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#445373</color>
+    <color name="colorPrimaryDark">#35415A</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="green">#32a852</color>
@@ -10,12 +10,14 @@
     <color name="offlineRedOutlineDark">#B15853</color>
     <color name="offlineRedText">#FFF0EE</color>
     <color name="offlineRedTextShadow">#82312D</color>
-    <color name="toolbarTeal">#39B8A8</color>
-    <color name="toolbarTealDark">#2A9F91</color>
-    <color name="loginTitleEngraved">#1F766D</color>
-    <color name="toolbarTealInset">#319D91</color>
-    <color name="toolbarTealOutlineDark">#30988C</color>
-    <color name="toolbarTextMuted">#236B64</color>
+    <color name="slateIndigo">#445373</color>
+    <color name="slateIndigoDark">#3B4864</color>
+    <color name="loginTitleEngraved">#293246</color>
+    <color name="slateIndigoInset">#3A4762</color>
+    <color name="slateIndigoOutlineDark">#37445E</color>
+    <color name="subtitleBandHighlight">#5B6B8D</color>
+    <color name="toolbarTitleShadow">#323D55</color>
+    <color name="toolbarTextMuted">#D0D6E2</color>
     <color name="clinicScreenBackground">#F8F5FA</color>
     <color name="clinicCardBackground">#FFFFFF</color>
     <color name="clinicCardStroke">#ECE7EF</color>
@@ -34,5 +36,5 @@
     <color name="itemInputStroke">#D9E0E3</color>
     <color name="itemYesGreen">#54A866</color>
     <color name="itemNoRed">#D75B55</color>
-    <color name="itemSetBlue">#35B8A8</color>
+    <color name="itemSetBlue">@color/colorPrimary</color>
 </resources>

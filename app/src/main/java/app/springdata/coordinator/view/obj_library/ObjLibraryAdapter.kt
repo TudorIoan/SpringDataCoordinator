@@ -1,5 +1,6 @@
 package app.springdata.coordinator.view.obj_library
 
+import app.springdata.coordinator.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,13 @@ class ObjLibraryAdapter(
 
         override fun bind(item: ObjLibraryListItem.ObjectiveTypeItem) {
             binding.textView.text = item.objectiveType.displayName
+            binding.root.setBackgroundResource(
+                if (item.expanded) R.drawable.bg_objective_type_expanded
+                else R.drawable.bg_objective_type_collapsed
+            )
+            binding.chevronView.setImageResource(
+                if (item.expanded) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
+            )
 
             binding.root.setOnClickListener {
                 onItemClicked(item)
@@ -53,7 +61,14 @@ class ObjLibraryAdapter(
         private val onItemRemove: (Objective) -> Unit
     ) : BaseViewHolder<ObjLibraryListItem.ObjectiveItem>(binding.root) {
 
-        override fun bind(item: ObjLibraryListItem.ObjectiveItem) {
+        override fun bind(item: ObjLibraryListItem.ObjectiveItem) = bind(item, isLastInGroup = true)
+
+        fun bind(item: ObjLibraryListItem.ObjectiveItem, isLastInGroup: Boolean) {
+            binding.root.setBackgroundResource(
+                if (isLastInGroup) R.drawable.bg_objective_item_last
+                else R.drawable.bg_objective_item_middle
+            )
+            binding.separator.isVisible = !isLastInGroup
             binding.nameView.text = item.objective.name
 
             // Hide buttons layout initially
@@ -112,7 +127,15 @@ class ObjLibraryAdapter(
         val item = items[position]
         when (holder) {
             is ObjectiveTypeViewHolder -> holder.bind(item as ObjLibraryListItem.ObjectiveTypeItem)
-            is ObjectiveViewHolder -> holder.bind(item as ObjLibraryListItem.ObjectiveItem)
+            is ObjectiveViewHolder -> {
+                val objectiveItem = item as ObjLibraryListItem.ObjectiveItem
+                val nextItem = items.getOrNull(position + 1)
+                holder.bind(
+                    objectiveItem,
+                    isLastInGroup = nextItem !is ObjLibraryListItem.ObjectiveItem ||
+                        nextItem.objective.type != objectiveItem.objective.type
+                )
+            }
         }
     }
 
