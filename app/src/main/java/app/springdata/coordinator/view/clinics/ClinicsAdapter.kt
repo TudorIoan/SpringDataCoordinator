@@ -84,7 +84,7 @@ class ClinicsAdapter(
     }
 
     private fun initialsBackground(view: View): GradientDrawable {
-        val radius = 10f * android.content.res.Resources.getSystem().displayMetrics.density
+        val radius = view.resources.getDimension(R.dimen.icon_corner_radius)
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = radius

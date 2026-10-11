@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/clinicCardBackground"
-                app:cardCornerRadius="18dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="5dp"
                 app:strokeColor="@android:color/transparent"
                 app:strokeWidth="0dp">
@@ -157,7 +157,7 @@
                         android:textColor="@color/offlineRed"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        app:cornerRadius="18dp"
+                        app:cornerRadius="@dimen/card_corner_radius"
                         app:icon="@drawable/ic_logout"
                         app:iconGravity="textStart"
                         app:iconTint="@color/offlineRed"
@@ -175,7 +175,7 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="@color/clinicCardBackground"
-                app:cardCornerRadius="18dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="5dp"
                 app:strokeColor="@android:color/transparent"
                 app:strokeWidth="0dp"
@@ -238,7 +238,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        app:cornerRadius="18dp" />
+                        app:cornerRadius="@dimen/card_corner_radius" />
 
                 </LinearLayout>
 
@@ -259,6 +259,7 @@
         app:backgroundTint="@color/slateIndigo"
         app:elevation="8dp"
         app:fabCustomSize="58dp"
+        app:shapeAppearanceOverlay="@style/FeedbackButtonShape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="26dp"

@@ -94,7 +94,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:cardBackgroundColor="@color/clinicCardBackground"
-                app:cardCornerRadius="18dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="5dp"
                 app:cardUseCompatPadding="true"
                 app:strokeColor="@android:color/transparent"

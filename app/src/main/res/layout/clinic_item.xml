@@ -12,7 +12,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/clinicCardBackground"
-    app:cardCornerRadius="18dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="5dp"
     app:strokeColor="@android:color/transparent"
     app:strokeWidth="0dp">
