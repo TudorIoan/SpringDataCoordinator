@@ -5,7 +5,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/clinicScreenBackground">
+            android:background="@color/slateIndigo">
 
             <!--Subtitle view-->
             <include
@@ -21,10 +21,8 @@
                 android:id="@+id/levelTabsCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="14dp"
-                android:layout_marginTop="18dp"
                 app:cardBackgroundColor="@color/clinicCardBackground"
-                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardCornerRadius="0dp"
                 app:cardElevation="5dp"
                 app:strokeWidth="0dp"
                 app:layout_constraintEnd_toEndOf="parent"

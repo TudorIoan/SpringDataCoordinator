@@ -62,7 +62,15 @@ class ObjectivesAdapter(
             )
 
             // Set level label text and background color
-            binding.levelLabel.text = item.objectiveType.level.displayName.uppercase()
+            binding.levelLabel.text = item.objectiveType.level.displayName
+            binding.levelLabel.setTextColor(ContextCompat.getColor(
+                binding.root.context,
+                if (item.objectiveType.level == ObjLevel.INTERMEDIATE) {
+                    R.color.objectiveLevelIntermediateText
+                } else {
+                    android.R.color.white
+                }
+            ))
             binding.levelLabel.isVisible = true
 
             // Create rounded background with appropriate color
@@ -80,9 +88,9 @@ class ObjectivesAdapter(
 
         private fun getLevelBackgroundColor(level: ObjLevel): Int {
             return when (level) {
-                ObjLevel.BEGINNER -> 0xFF4CAF50.toInt() // Green
-                ObjLevel.INTERMEDIATE -> ContextCompat.getColor(binding.root.context, R.color.objectiveLevelYellow)
-                ObjLevel.ADVANCED -> 0xFF2196F3.toInt() // Blue
+                ObjLevel.BEGINNER -> ContextCompat.getColor(binding.root.context, R.color.objectiveLevelBeginner)
+                ObjLevel.INTERMEDIATE -> ContextCompat.getColor(binding.root.context, R.color.objectiveLevelIntermediate)
+                ObjLevel.ADVANCED -> ContextCompat.getColor(binding.root.context, R.color.objectiveLevelAdvanced)
             }
         }
     }
