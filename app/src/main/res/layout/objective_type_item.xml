@@ -9,7 +9,7 @@
     android:layout_marginEnd="14dp"
     android:background="@drawable/bg_objective_type_collapsed"
     android:clickable="true"
-    android:elevation="5dp"
+    android:elevation="1dp"
     android:focusable="true"
     android:minHeight="72dp"
     android:paddingStart="16dp"
@@ -60,7 +60,7 @@
         android:layout_height="28dp"
         android:padding="2dp"
         android:src="@drawable/ic_chevron_down"
-        app:tint="@color/clinicChevronText"
+        app:tint="@color/objectiveGroupHeaderText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

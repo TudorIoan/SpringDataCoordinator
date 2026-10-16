@@ -1,6 +1,7 @@
 package app.springdata.coordinator.view.obj_library
 
 import android.os.Bundle
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -126,6 +128,7 @@ class ObjLibraryFragment : BaseFragment() {
                     2 -> ObjLevel.ADVANCED
                     else -> ObjLevel.BEGINNER
                 }
+                updateLevelAccentColor(level)
                 viewModel.takeAction(ObjLibraryAction.LevelTabSelected(level))
             }
 
@@ -153,7 +156,22 @@ class ObjLibraryFragment : BaseFragment() {
         updateSelectedTab(selectedLevel)
     }
 
+    private fun updateLevelAccentColor(level: ObjLevel) {
+        val colorRes = when (level) {
+            ObjLevel.BEGINNER -> R.color.objectiveLevelBeginner
+            ObjLevel.INTERMEDIATE -> R.color.objectiveLevelIntermediate
+            ObjLevel.ADVANCED -> R.color.objectiveLevelAdvanced
+        }
+        val color = ContextCompat.getColor(requireContext(), colorRes)
+        binding.levelTabLayout.setSelectedTabIndicatorColor(color)
+        (binding.objLibraryRecyclerView.background.mutate() as GradientDrawable).setStroke(
+            resources.getDimensionPixelSize(R.dimen.objective_library_border_width),
+            color
+        )
+    }
+
     private fun updateSelectedTab(level: ObjLevel) {
+        updateLevelAccentColor(level)
         val tabIndex = when (level) {
             ObjLevel.BEGINNER -> 0
             ObjLevel.INTERMEDIATE -> 1

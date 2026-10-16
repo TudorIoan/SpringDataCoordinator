@@ -2,4 +2,5 @@
 <resources>
     <dimen name="card_corner_radius">5dp</dimen>
     <dimen name="icon_corner_radius">5dp</dimen>
+    <dimen name="objective_library_border_width">3dp</dimen>
 </resources>

@@ -27,17 +27,18 @@
     <color name="clinicChevronText">#9AA7B0</color>
     <color name="clinicChevronTextLight">#B4BEC5</color>
     <color name="bottomNavInactive">#A8B3BD</color>
-    <color name="objectiveGroupHeaderBackground">#EEF1F3</color>
-    <color name="objectiveGroupHeaderText">#48535A</color>
+    <color name="objectiveGroupHeaderBackground">#E1E7EF</color>
+    <color name="objectiveGroupHeaderText">#445373</color>
     <color name="objectiveGroupItemBackground">#FFFFFF</color>
     <color name="objectiveGroupDivider">#E9EFEC</color>
-    <color name="objectiveLevelBeginner">#39833F</color>
-    <color name="objectiveLevelIntermediate">#F2B544</color>
-    <color name="objectiveLevelAdvanced">#365DC2</color>
+    <color name="objectiveLevelBeginner">#F2B544</color>
+    <color name="objectiveLevelIntermediate">#365DC2</color>
+    <color name="objectiveLevelAdvanced">#39833F</color>
     <color name="itemInputBackground">#FFFFFF</color>
     <color name="itemInputStroke">#D9E0E3</color>
     <color name="itemYesGreen">#54A866</color>
     <color name="itemNoRed">#D75B55</color>
     <color name="itemSetBlue">@color/colorPrimary</color>
     <color name="objectiveLevelIntermediateText">#FFFFFF</color>
+    <color name="objectiveGroupBorder">#C8D2DF</color>
 </resources>
