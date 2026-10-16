@@ -27,7 +27,8 @@ class ObjLibraryViewModel @Inject constructor(
 
     val objectives = mutableListOf<Objective>()
     val objLibraryListItems = mutableListOf<ObjLibraryListItem>()
-    private var selectedLevel = orgRepo.getSelectedLevel() ?: ObjLevel.BEGINNER
+    private var selectedLevel = orgRepo.getSelectedLevel()
+        ?: ObjLevel.BEGINNER.also { orgRepo.setSelectedLevel(it) }
 
     fun takeAction(action: ObjLibraryAction) {
         when (action) {
@@ -94,7 +95,6 @@ class ObjLibraryViewModel @Inject constructor(
     }
 
     private fun handleAddObjectiveClicked() {
-        orgRepo.setSelectedLevel(selectedLevel)
         update(ObjLibraryState.GoToAddObjective)
     }
 
@@ -132,9 +132,14 @@ class ObjLibraryViewModel @Inject constructor(
     }
 
     private fun handleLevelTabSelected(level: ObjLevel) {
-        selectedLevel = level
+        saveSelectedLevel(level)
         refreshObjectivesList()
         update(ObjLibraryState.ContentLoaded(objLibraryListItems, selectedLevel))
+    }
+
+    private fun saveSelectedLevel(level: ObjLevel) {
+        selectedLevel = level
+        orgRepo.setSelectedLevel(level)
     }
 
     private fun refreshObjectivesList() {
