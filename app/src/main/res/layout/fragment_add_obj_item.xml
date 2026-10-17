@@ -5,7 +5,26 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:background="@color/slateIndigo">
+
+        <include
+            android:id="@+id/subtitleInclude"
+            layout="@layout/view_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/formBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_objective_library_list"
+            app:layout_constraintTop_toBottomOf="@id/subtitleInclude"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Success Message View -->
         <LinearLayout
@@ -39,20 +58,24 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/itemNameInputLayout"
+            style="@style/LibraryFormInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
+            app:layout_goneMarginTop="20dp"
             android:layout_marginHorizontal="20dp"
             android:hint="Item Name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/formErrorTextView">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/itemNameEditText"
+                style="@style/LibraryFormFieldContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:textColor="@android:color/white"
+                android:inputType="text|textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,21 +86,27 @@
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="20dp"
             android:hint="Item Type"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/LibraryFormDropdown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/itemNameInputLayout">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/itemTypeTextView"
+                style="@style/LibraryFormFieldContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:popupBackground="@color/clinicCardBackground"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/addItemButton"
+            android:textColor="@color/slateIndigo"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="@dimen/card_corner_radius"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -88,21 +117,21 @@
             app:layout_constraintTop_toBottomOf="@id/itemTypeInputLayout" />
 
         <TextView
-            android:id="@+id/errorTextView"
+            android:id="@+id/formErrorTextView"
+            style="@style/LibraryFormError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="20dp"
-            android:textColor="@android:color/holo_red_dark"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addItemButton" />
+            app:layout_constraintTop_toBottomOf="@id/subtitleInclude" />
 
         <!--Loading view-->
         <include
             android:id="@+id/loadingViewInclude"
-            layout="@layout/view_loading"
+            layout="@layout/view_library_loading"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

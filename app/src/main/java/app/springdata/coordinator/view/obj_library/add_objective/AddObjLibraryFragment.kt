@@ -1,5 +1,6 @@
 package app.springdata.coordinator.view.obj_library.add_objective
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,7 +72,11 @@ class AddObjLibraryFragment : BaseFragment() {
         // Handle create objective button
         binding.createObjectiveButton.setOnClickListener {
             val objectiveName = binding.objectiveNameEditText.text.toString()
-            val objectiveType = objectiveTypes.find { it.displayName == binding.objectiveTypeTextView.text.toString() }!!
+            val objectiveType = objectiveTypes.find { it.displayName == binding.objectiveTypeTextView.text.toString() }
+            if (objectiveType == null) {
+                showError("Select a valid objective type.")
+                return@setOnClickListener
+            }
             viewModel.takeAction(AddObjLibraryAction.CreateObjectiveClicked(objectiveType, objectiveName, currentLevel))
         }
     }
@@ -83,12 +89,22 @@ class AddObjLibraryFragment : BaseFragment() {
 
     private fun updateLevelDisplay(level: ObjLevel) {
         binding.selectedLevelTextView.text = level.displayName
+        val colorRes = when (level) {
+            ObjLevel.BEGINNER -> R.color.objectiveLevelBeginner
+            ObjLevel.INTERMEDIATE -> R.color.objectiveLevelIntermediate
+            ObjLevel.ADVANCED -> R.color.objectiveLevelAdvanced
+        }
+        binding.selectedLevelTextView.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
+        (binding.formBackground.background.mutate() as GradientDrawable).setStroke(
+            resources.getDimensionPixelSize(R.dimen.objective_library_border_width),
+            ContextCompat.getColor(requireContext(), colorRes)
+        )
     }
 
     private fun updateObjectiveTypeDropdown(level: ObjLevel) {
         objectiveTypes.clear()
         objectiveTypes.addAll(ObjectiveType.getObjectiveTypesByLevel(level))
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, objectiveTypes.map { it.displayName })
+        val adapter = ArrayAdapter(requireContext(), R.layout.library_dropdown_item, objectiveTypes.map { it.displayName })
         binding.objectiveTypeTextView.setAdapter(adapter)
 
         // Set the first item as selected if available
@@ -98,12 +114,12 @@ class AddObjLibraryFragment : BaseFragment() {
     }
 
     private fun showError(generalError: String) {
-        binding.errorTextView.text = generalError
-        binding.errorTextView.visibility = View.VISIBLE
+        binding.formErrorTextView.text = generalError
+        binding.formErrorTextView.visibility = View.VISIBLE
     }
 
     private fun hideError() {
-        binding.errorTextView.visibility = View.GONE
+        binding.formErrorTextView.visibility = View.GONE
     }
 
     private fun showLoading() = binding.loadingViewInclude.loadingView.apply { visibility = View.VISIBLE }

@@ -37,4 +37,36 @@
         <item name="cornerSize">@dimen/icon_corner_radius</item>
     </style>
 
+    <style name="LibraryFormInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/slateIndigoInset</item>
+        <item name="boxStrokeColor">@color/toolbarTextMuted</item>
+        <item name="android:textColorHint">@color/toolbarTextMuted</item>
+        <item name="hintTextColor">@android:color/white</item>
+        <item name="endIconTint">@android:color/white</item>
+        <item name="boxCornerRadiusTopStart">@dimen/card_corner_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/card_corner_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/card_corner_radius</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/card_corner_radius</item>
+    </style>
+
+    <style name="LibraryFormDropdown" parent="LibraryFormInput">
+        <item name="endIconMode">dropdown_menu</item>
+    </style>
+
+    <style name="LibraryFormFieldContent" parent="">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="LibraryFormError" parent="">
+        <item name="android:textColor">#FFAAA5</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
 </resources>

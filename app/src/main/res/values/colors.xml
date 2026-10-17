@@ -41,4 +41,5 @@
     <color name="itemSetBlue">@color/colorPrimary</color>
     <color name="objectiveLevelIntermediateText">#FFFFFF</color>
     <color name="objectiveGroupBorder">#C8D2DF</color>
+    <color name="libraryLoadingOverlay">#CC293246</color>
 </resources>

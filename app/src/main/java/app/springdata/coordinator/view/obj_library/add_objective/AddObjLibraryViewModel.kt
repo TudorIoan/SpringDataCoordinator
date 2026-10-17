@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 import app.springdata.coordinator.model.ObjLevel
 import app.springdata.coordinator.model.ObjectiveType
 import app.springdata.coordinator.repo.ObjectiveRepository
@@ -20,6 +21,8 @@ class AddObjLibraryViewModel @Inject constructor(
     private val _state = MutableLiveData<AddObjLibraryState>()
         .apply { value = AddObjLibraryState.Idle }
     val state: LiveData<AddObjLibraryState> = _state
+
+    private var isSaving = false
 
     fun takeAction(action: AddObjLibraryAction) {
         when (action) {
@@ -37,19 +40,30 @@ class AddObjLibraryViewModel @Inject constructor(
     }
 
     private fun handleCreateObjective(objectiveType: ObjectiveType, objectiveName: String, level: ObjLevel) {
+        if (isSaving) return
+        val name = objectiveName.trim()
+        if (name.isEmpty()) {
+            update(AddObjLibraryState.Error("Objective name cannot be empty."))
+            return
+        }
+        isSaving = true
         update(AddObjLibraryState.Loading)
         viewModelScope.launch {
             try {
-                val result = objectiveRepo.addObjective(objectiveType, objectiveName, mutableListOf(), level)
+                val result = objectiveRepo.addObjective(objectiveType, name, mutableListOf(), level)
 
                 result.fold(
-                    onSuccess = { update(AddObjLibraryState.ObjectiveCreated(objectiveName)) },
+                    onSuccess = { update(AddObjLibraryState.ObjectiveCreated(name)) },
                     onFailure = { exception ->
                         update(AddObjLibraryState.Error(exception.message ?: "Unknown error creating objective"))
                     }
                 )
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (exception: Exception) {
                 update(AddObjLibraryState.Error(exception.message ?: "Unknown error creating objective"))
+            } finally {
+                isSaving = false
             }
         }
     }

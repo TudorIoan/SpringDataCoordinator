@@ -4,7 +4,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/slateIndigo">
+
+        <View
+            android:id="@+id/formBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_objective_library_list"
+            app:layout_constraintTop_toBottomOf="@id/levelSubtitleBand"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Success Message View -->
         <LinearLayout
@@ -36,53 +47,71 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/levelLabel"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/levelSubtitleBand"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="20dp"
-            android:text="Level:"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:background="@drawable/bg_subtitle_band"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="11dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/selectedLevelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Beginner"
-            android:textSize="18sp"
-            android:textColor="?attr/colorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/levelLabel"
-            app:layout_constraintTop_toTopOf="@id/levelLabel"
-            app:layout_constraintBottom_toBottomOf="@id/levelLabel" />
+            <TextView
+                android:id="@+id/levelLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="Level:"
+                android:textColor="@color/toolbarTextMuted"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/selectedLevelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:includeFontPadding="false"
+                android:text="Beginner"
+                android:textColor="@color/objectiveLevelBeginner"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/objectiveTypeInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_goneMarginTop="20dp"
             android:layout_marginHorizontal="20dp"
             android:hint="Objective Type"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/LibraryFormDropdown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/selectedLevelTextView">
+            app:layout_constraintTop_toBottomOf="@id/formErrorTextView">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/objectiveTypeTextView"
+                style="@style/LibraryFormFieldContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:popupBackground="@color/clinicCardBackground"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/objectiveNameInputLayout"
+            style="@style/LibraryFormInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -94,14 +123,19 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/objectiveNameEditText"
+                style="@style/LibraryFormFieldContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:textColor="@android:color/white"
+                android:inputType="text|textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/createObjectiveButton"
+            android:textColor="@color/slateIndigo"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="@dimen/card_corner_radius"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -112,21 +146,21 @@
             app:layout_constraintTop_toBottomOf="@id/objectiveNameInputLayout" />
 
         <TextView
-            android:id="@+id/errorTextView"
+            android:id="@+id/formErrorTextView"
+            style="@style/LibraryFormError"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="20dp"
-            android:textColor="@android:color/holo_red_dark"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/createObjectiveButton" />
+            app:layout_constraintTop_toBottomOf="@id/levelSubtitleBand" />
 
         <!--Loading view-->
         <include
             android:id="@+id/loadingViewInclude"
-            layout="@layout/view_loading"
+            layout="@layout/view_library_loading"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

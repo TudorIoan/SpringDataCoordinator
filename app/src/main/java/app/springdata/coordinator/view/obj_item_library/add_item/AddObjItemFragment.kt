@@ -1,5 +1,7 @@
 package app.springdata.coordinator.view.obj_item_library.add_item
 
+import android.graphics.drawable.GradientDrawable
+import androidx.core.content.ContextCompat
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +13,10 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import android.os.Handler
 import android.os.Looper
+import app.springdata.coordinator.R
 import app.springdata.coordinator.BaseFragment
 import app.springdata.coordinator.databinding.FragmentAddObjItemBinding
+import app.springdata.coordinator.model.ObjLevel
 import app.springdata.coordinator.model.ObjItemType
 
 @AndroidEntryPoint
@@ -45,6 +49,10 @@ class AddObjItemFragment : BaseFragment() {
                 hideLoading()
             }
 
+            if (it !is AddObjItemState.Error) {
+                binding.formErrorTextView.visibility = View.GONE
+            }
+
             when (it) {
                 is AddObjItemState.Loading -> showLoading()
                 is AddObjItemState.Error -> showError(it.error)
@@ -57,24 +65,41 @@ class AddObjItemFragment : BaseFragment() {
 
     private fun configureViews() {
         hideBottomBar()
+        binding.subtitleInclude.subtitleTextView.apply {
+            text = "Objective: ${viewModel.objectiveName}"
+            visibility = View.VISIBLE
+        }
+        val colorRes = when (viewModel.level) {
+            ObjLevel.BEGINNER -> R.color.objectiveLevelBeginner
+            ObjLevel.INTERMEDIATE -> R.color.objectiveLevelIntermediate
+            ObjLevel.ADVANCED -> R.color.objectiveLevelAdvanced
+        }
+        (binding.formBackground.background.mutate() as GradientDrawable).setStroke(
+            resources.getDimensionPixelSize(R.dimen.objective_library_border_width),
+            ContextCompat.getColor(requireContext(), colorRes)
+        )
 
         // Setup item type dropdown
         val itemTypes = ObjItemType.getAllDisplayNames()
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, itemTypes)
+        val adapter = ArrayAdapter(requireContext(), R.layout.library_dropdown_item, itemTypes)
         binding.itemTypeTextView.setAdapter(adapter)
         binding.itemTypeTextView.setText(itemTypes[0], false)
 
         binding.addItemButton.setOnClickListener {
             val itemName = binding.itemNameEditText.text.toString()
             val itemTypeStr = binding.itemTypeTextView.text.toString()
-            val itemType = ObjItemType.fromDisplayName(itemTypeStr)
+            val itemType = ObjItemType.values().find { it.displayName == itemTypeStr }
+            if (itemType == null) {
+                showError("Select a valid item type.")
+                return@setOnClickListener
+            }
             viewModel.takeAction(AddObjItemAction.AddItemClicked(itemName, itemType))
         }
     }
 
     private fun showError(generalError: String) {
-        binding.errorTextView.text = generalError
-        binding.errorTextView.visibility = View.VISIBLE
+        binding.formErrorTextView.text = generalError
+        binding.formErrorTextView.visibility = View.VISIBLE
     }
 
     private fun showItemAddedMessage(itemName: String) {

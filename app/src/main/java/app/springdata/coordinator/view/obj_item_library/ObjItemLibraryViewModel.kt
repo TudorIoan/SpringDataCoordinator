@@ -53,8 +53,9 @@ class ObjItemLibraryViewModel @Inject constructor(
     }
 
     private fun updateItems() {
-        items = orgRepo.requireSelectedObjective().itemsList
-        update(ObjItemLibraryState.ContentLoaded(items))
+        val objective = orgRepo.requireSelectedObjective()
+        items = objective.itemsList
+        update(ObjItemLibraryState.ContentLoaded(items, objective.level))
     }
 
     private fun handleUpdateItem(updatedObjItem: ObjItem) {

@@ -4,7 +4,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/slateIndigo">
 
             <!--Subtitle view-->
             <include
@@ -18,12 +19,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/objItemsRecyclerView"
+                android:background="@drawable/bg_objective_library_list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@id/subtitleInclude"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:paddingTop="6dp"
                 android:paddingBottom="154dp"
                 android:clipToPadding="false"
                 />
@@ -31,7 +34,7 @@
             <!--Loading view-->
             <include
                 android:id="@+id/loadingViewInclude"
-                layout="@layout/view_loading"
+                layout="@layout/view_library_loading"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"

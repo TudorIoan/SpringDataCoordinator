@@ -75,7 +75,7 @@
             <!--Loading view-->
             <include
                 android:id="@+id/loadingViewInclude"
-                layout="@layout/view_loading"
+                layout="@layout/view_library_loading"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"

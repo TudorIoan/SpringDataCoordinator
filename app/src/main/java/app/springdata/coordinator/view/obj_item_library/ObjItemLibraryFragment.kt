@@ -1,5 +1,6 @@
 package app.springdata.coordinator.view.obj_item_library
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -24,6 +26,7 @@ import app.springdata.coordinator.R
 import app.springdata.coordinator.databinding.DialogEditObjItemBinding
 import app.springdata.coordinator.databinding.FragmentObjItemLibraryBinding
 import app.springdata.coordinator.model.ObjItem
+import app.springdata.coordinator.model.ObjLevel
 import app.springdata.coordinator.model.ObjItemType
 
 @AndroidEntryPoint
@@ -65,7 +68,7 @@ class ObjItemLibraryFragment : BaseFragment() {
                 is ObjItemLibraryState.Loading -> showLoading()
                 is ObjItemLibraryState.Error -> showError(it.generalError)
                 is ObjItemLibraryState.Idle -> {}
-                is ObjItemLibraryState.ContentLoaded -> handleContentLoaded(it.items)
+                is ObjItemLibraryState.ContentLoaded -> handleContentLoaded(it.items, it.level)
                 is ObjItemLibraryState.ObjectiveKidsLoaded -> showObjectiveKidsDialog(it.kids)
                 is ObjItemLibraryState.GoToObjLibrary -> navigateToObjLibrary()
             }
@@ -117,8 +120,17 @@ class ObjItemLibraryFragment : BaseFragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun handleContentLoaded(items: List<ObjItem>) {
+    private fun handleContentLoaded(items: List<ObjItem>, level: ObjLevel) {
         objItemsAdapter.updateData(items)
+        val colorRes = when (level) {
+            ObjLevel.BEGINNER -> R.color.objectiveLevelBeginner
+            ObjLevel.INTERMEDIATE -> R.color.objectiveLevelIntermediate
+            ObjLevel.ADVANCED -> R.color.objectiveLevelAdvanced
+        }
+        (binding.objItemsRecyclerView.background.mutate() as GradientDrawable).setStroke(
+            resources.getDimensionPixelSize(R.dimen.objective_library_border_width),
+            ContextCompat.getColor(requireContext(), colorRes)
+        )
     }
 
     private fun showError(generalError: String) {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 import app.springdata.coordinator.model.ObjItem
 import app.springdata.coordinator.model.ObjItemType
 import app.springdata.coordinator.repo.ObjectiveRepository
@@ -21,6 +22,12 @@ class AddObjItemViewModel @Inject constructor(
         .apply { value = AddObjItemState.Idle }
     val state: LiveData<AddObjItemState> = _state
 
+    val objectiveName get() = orgRepo.requireSelectedObjective().name
+
+    val level get() = orgRepo.requireSelectedObjective().level
+
+    private var isSaving = false
+
     fun takeAction(action: AddObjItemAction) {
         when (action) {
             is AddObjItemAction.AddItemClicked -> handleAddItem(action.itemName, action.itemType)
@@ -32,23 +39,38 @@ class AddObjItemViewModel @Inject constructor(
     }
 
     private fun handleAddItem(itemName: String, itemType: ObjItemType) {
+        if (isSaving) return
+        val name = itemName.trim()
+        if (name.isEmpty()) {
+            update(AddObjItemState.Error("Item name cannot be empty."))
+            return
+        }
+        val objective = orgRepo.requireSelectedObjective()
+        if (objective.itemsList.any { it.name.trim().equals(name, ignoreCase = true) }) {
+            update(AddObjItemState.Error("Item already exists."))
+            return
+        }
+        val newItem = ObjItem(name, name.lowercase(), itemType)
+        val updatedObjective = objective.copy(
+            itemsList = objective.itemsList.toMutableList().apply { add(newItem) }
+        )
+        isSaving = true
         update(AddObjItemState.Loading)
-            if (orgRepo.requireSelectedObjective().itemsList.any { it.normalizedName == itemName.trim().lowercase() }) {
-                update(AddObjItemState.Error("Item already exists"))
-            } else {
-                val newItem = ObjItem(itemName.trim(), itemName.trim().lowercase(), itemType)
-                val updatedItemsList = orgRepo.requireSelectedObjective().itemsList.toMutableList().apply { add(newItem) }
-                val updatedObjective = orgRepo.requireSelectedObjective().copy(itemsList = updatedItemsList)
-
-                viewModelScope.launch {
+        viewModelScope.launch {
+            try {
+                objectiveRepo.updateObjective(updatedObjective).onSuccess {
                     orgRepo.setSelectedObjective(updatedObjective)
-                    val result = objectiveRepo.updateObjective(updatedObjective)
-                    result.onSuccess {
-                        update(AddObjItemState.ItemAdded(itemName.trim()))
-                    }.onFailure { exception ->
-                        update(AddObjItemState.Error(exception.message ?: "Error adding item"))
-                    }
+                    update(AddObjItemState.ItemAdded(name))
+                }.onFailure { exception ->
+                    update(AddObjItemState.Error(exception.message ?: "Error adding item"))
                 }
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                update(AddObjItemState.Error(exception.message ?: "Error adding item"))
+            } finally {
+                isSaving = false
             }
+        }
     }
 }

@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_objective_kids"
         android:icon="@drawable/ic_kids"
+        app:iconTint="@android:color/white"
         android:title="@string/objective_kids"
         app:showAsAction="always" />
 
