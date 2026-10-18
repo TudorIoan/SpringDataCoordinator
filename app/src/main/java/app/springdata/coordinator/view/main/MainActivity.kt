@@ -184,7 +184,8 @@ class MainActivity : AppCompatActivity() {
         destinationId == R.id.clinicsFragment ||
             destinationId == R.id.objLibraryFragment ||
             destinationId == R.id.objItemLibraryFragment ||
-            destinationId == R.id.therapistsFragment
+            destinationId == R.id.therapistsFragment ||
+            destinationId == R.id.myAccountFragment
 
     private fun collapseBottomBar() {
         isBottomBarExpanded = false

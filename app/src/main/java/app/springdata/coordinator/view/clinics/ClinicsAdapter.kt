@@ -31,6 +31,7 @@ class ClinicsAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.nameView)
         val initialsView: TextView = view.findViewById(R.id.initialsView)
+        val chevronView: ImageView = view.findViewById(R.id.chevronView)
         val buttonsLayout: LinearLayout = view.findViewById(R.id.buttons_layout)
         val removeView: ImageView = view.findViewById(R.id.removeView)
         val editView: ImageView = view.findViewById(R.id.editView)
@@ -49,17 +50,20 @@ class ClinicsAdapter(
         holder.initialsView.background = initialsBackground(holder.itemView)
         holder.initialsView.setTextColor(generatedInitialsColor(clinic.name))
         holder.buttonsLayout.isVisible = false
+        holder.chevronView.isVisible = true
 
         holder.itemView.setOnClickListener {
             if (!holder.buttonsLayout.isVisible) {
                 onItemClicked(clinic)
             } else {
                 holder.buttonsLayout.isVisible = false
+                holder.chevronView.isVisible = true
             }
         }
 
         holder.itemView.setOnLongClickListener {
             holder.buttonsLayout.isVisible = true
+            holder.chevronView.isVisible = false
             true
         }
 

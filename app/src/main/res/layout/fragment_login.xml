@@ -110,19 +110,11 @@
                     android:paddingBottom="16dp">
 
                     <TextView
+            style="@style/ErrorBanner"
                         android:id="@+id/errorTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_login_error"
-                        android:paddingStart="12dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="10dp"
                         android:text=""
-                        android:textColor="@color/offlineRed"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:visibility="gone"
                         tools:text="Unable to sign in"
                         tools:visibility="visible" />

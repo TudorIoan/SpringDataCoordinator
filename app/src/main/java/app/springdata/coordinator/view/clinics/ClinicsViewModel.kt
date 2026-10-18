@@ -76,7 +76,10 @@ class ClinicsViewModel @Inject constructor(
             result.onSuccess {
                 val index = clinicsList.indexOfFirst { it.id == clinic.id }
                 if (index != -1) {
-                    clinicsList[index] = clinic
+                    clinicsList[index] = clinic.copy(
+                        name = clinic.name.trim(),
+                        normalizedName = clinic.name.trim().lowercase()
+                    )
                 }
                 update(ClinicsState.ContentLoaded(clinicsList))
             }.onFailure { exception ->

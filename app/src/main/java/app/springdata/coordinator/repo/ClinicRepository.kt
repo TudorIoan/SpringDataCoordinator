@@ -201,7 +201,9 @@ class ClinicRepository @Inject constructor(
             return Result.failure(Exception("Clinic ID cannot be empty."))
         }
 
-        if (clinic.name.trim().isEmpty()) {
+        val trimmedName = clinic.name.trim()
+        val normalizedName = trimmedName.lowercase()
+        if (trimmedName.isEmpty()) {
             return Result.failure(Exception("Clinic name cannot be empty."))
         }
 
@@ -211,9 +213,18 @@ class ClinicRepository @Inject constructor(
         }
 
         return try {
+            val matchingClinics = firestore.collection("clinics")
+                .whereEqualTo("normalizedName", normalizedName)
+                .limit(2)
+                .get()
+                .await()
+            if (matchingClinics.documents.any { it.id != clinic.id }) {
+                return Result.failure(Exception("A clinic with the name '$trimmedName' already exists."))
+            }
+
             firestore.collection("clinics")
                 .document(clinic.id)
-                .set(clinic)
+                .set(clinic.copy(name = trimmedName, normalizedName = normalizedName))
                 .await()
             Result.success(Unit)
         } catch (e: Exception) {

@@ -63,10 +63,18 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="LibraryFormError" parent="">
-        <item name="android:textColor">#FFAAA5</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+    <style name="ErrorBanner" parent="">
+        <item name="android:background">@drawable/bg_login_error</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textColor">@color/offlineRed</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:layout_marginBottom">12dp</item>
     </style>
 
 </resources>
