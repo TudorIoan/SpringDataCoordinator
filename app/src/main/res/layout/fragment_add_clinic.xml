@@ -5,21 +5,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/clinicScreenBackground"
         android:fitsSystemWindows="true"
         >
 
         <TextView
             android:id="@+id/errorTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#ff0000"
-            android:textSize="18sp"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginHorizontal="20dp"
             />
 
@@ -32,12 +34,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/errorTextView"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_goneMarginTop="20dp"
             android:layout_marginHorizontal="20dp"
             >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/clinicNameEditText"
+                style="@style/LibraryFormFieldContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords" />

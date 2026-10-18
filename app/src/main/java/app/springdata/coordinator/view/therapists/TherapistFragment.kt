@@ -66,7 +66,7 @@ class TherapistFragment : BaseFragment() {
     }
 
     private fun configureViews() {
-        showBottomBar()
+        updateBottomBar(viewModel.isClinic)
 
         therapistAdapter = TherapistAdapter(
             onItemClicked = { therapist ->
@@ -86,7 +86,12 @@ class TherapistFragment : BaseFragment() {
 
     private fun handleContentLoaded(therapists: List<TherapistVM>, isClinic: Boolean) {
         therapistAdapter.updateData(therapists)
+        updateBottomBar(isClinic)
+    }
+
+    private fun updateBottomBar(isClinic: Boolean) {
         setBottomAddVisible(!isClinic)
+        if (isClinic) hideBottomBar() else showBottomBar()
     }
 
     private fun showError(generalError: String) {

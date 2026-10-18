@@ -12,6 +12,8 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import com.google.android.material.tabs.TabLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -74,9 +76,9 @@ class AddObjectiveFragment : BaseFragment() {
             binding.availableObjectivesRecyclerView.isVisible = objectives.isNotEmpty()
         }
 
-        // Observe selected level to update toggle buttons
+        // Keep the tabs in sync with the selected level
         viewModel.selectedLevel.observe(viewLifecycleOwner) { level ->
-            updateLevelToggleButtons(level)
+            updateLevelTabs(level)
         }
 
         // Observe available objective types to update dropdown
@@ -102,21 +104,22 @@ class AddObjectiveFragment : BaseFragment() {
             adapter = availableObjectivesAdapter
         }
 
-        // Setup level toggle buttons
-        binding.objLevelToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            if (isChecked) {
-                val selectedLevel = when (checkedId) {
-                    binding.beginnerToggleButton.id -> ObjLevel.BEGINNER
-                    binding.intermediateToggleButton.id -> ObjLevel.INTERMEDIATE
-                    binding.advancedToggleButton.id -> ObjLevel.ADVANCED
-                    else -> ObjLevel.BEGINNER
-                }
-                viewModel.takeAction(AddObjectiveAction.ObjLevelChanged(selectedLevel))
-            }
+        ObjLevel.values().forEach { level ->
+            binding.levelTabLayout.addTab(
+                binding.levelTabLayout.newTab().setText(level.displayName)
+            )
         }
+        updateLevelTabs(viewModel.selectedLevel.value ?: ObjLevel.BEGINNER)
+        binding.levelTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val level = ObjLevel.values()[tab.position]
+                updateLevelTabs(level)
+                viewModel.takeAction(AddObjectiveAction.ObjLevelChanged(level))
+            }
 
-        // Set default selection to Beginner
-        binding.beginnerToggleButton.isChecked = true
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
     }
 
     private fun showError(generalError: String) {
@@ -221,11 +224,15 @@ class AddObjectiveFragment : BaseFragment() {
         }
     }
 
-    private fun updateLevelToggleButtons(level: ObjLevel) {
-        when (level) {
-            ObjLevel.BEGINNER -> binding.beginnerToggleButton.isChecked = true
-            ObjLevel.INTERMEDIATE -> binding.intermediateToggleButton.isChecked = true
-            ObjLevel.ADVANCED -> binding.advancedToggleButton.isChecked = true
+    private fun updateLevelTabs(level: ObjLevel) {
+        val colorRes = when (level) {
+            ObjLevel.BEGINNER -> R.color.objectiveLevelBeginner
+            ObjLevel.INTERMEDIATE -> R.color.objectiveLevelIntermediate
+            ObjLevel.ADVANCED -> R.color.objectiveLevelAdvanced
+        }
+        binding.levelTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), colorRes))
+        if (binding.levelTabLayout.selectedTabPosition != level.ordinal) {
+            binding.levelTabLayout.selectTab(binding.levelTabLayout.getTabAt(level.ordinal))
         }
     }
 

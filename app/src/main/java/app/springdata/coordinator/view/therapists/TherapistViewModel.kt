@@ -27,6 +27,8 @@ class TherapistViewModel @Inject constructor(
 
     val therapistsList = mutableListOf<TherapistVM>()
 
+    val isClinic get() = orgRepo.getSelectedKid() == null
+
     fun takeAction(action: TherapistAction) {
         when (action) {
             is TherapistAction.Start -> handleStart()

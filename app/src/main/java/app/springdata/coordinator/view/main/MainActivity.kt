@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             currentDestinationId = destination.id
             addOverrideVisible = null
-            isBottomBarExpanded = destination.id == R.id.clinicsFragment
+            isBottomBarExpanded = isBottomBarAlwaysExpanded(destination.id)
             binding.toolbar.post { tintToolbarNavigationIcon() }
             updateBottomNavSelection(destination.id)
             updateNetworkStatus()
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.bottomNavigationCard.setOnClickListener {
-            if (!isBottomBarExpanded && currentDestinationId != R.id.clinicsFragment) {
+            if (!isBottomBarExpanded && !isBottomBarAlwaysExpanded(currentDestinationId)) {
                 isBottomBarExpanded = true
                 currentDestinationId?.let { destinationId -> updateBottomNavSelection(destinationId) }
             }
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                     val swipeThreshold = 40 * resources.displayMetrics.density
                     if (
                         isBottomBarExpanded &&
-                        currentDestinationId != R.id.clinicsFragment &&
+                        !isBottomBarAlwaysExpanded(currentDestinationId) &&
                         deltaX > swipeThreshold &&
                         abs(deltaX) > abs(deltaY)
                     ) {
@@ -179,6 +179,12 @@ class MainActivity : AppCompatActivity() {
             view.setOnTouchListener(swipeTouchListener)
         }
     }
+
+    private fun isBottomBarAlwaysExpanded(destinationId: Int?): Boolean =
+        destinationId == R.id.clinicsFragment ||
+            destinationId == R.id.objLibraryFragment ||
+            destinationId == R.id.objItemLibraryFragment ||
+            destinationId == R.id.therapistsFragment
 
     private fun collapseBottomBar() {
         isBottomBarExpanded = false
@@ -215,6 +221,8 @@ class MainActivity : AppCompatActivity() {
         val inactiveColor = ContextCompat.getColor(this, R.color.bottomNavInactive)
         val clinicsSelected = destinationId == R.id.clinicsFragment
         val librarySelected = destinationId == R.id.objLibraryFragment
+        val addOnly = destinationId == R.id.objItemLibraryFragment ||
+            destinationId == R.id.therapistsFragment
         val accountSelected = destinationId == R.id.myAccountFragment
         val addAvailable = destinationId == R.id.clinicsFragment ||
             destinationId == R.id.kidsFragment ||
@@ -223,7 +231,7 @@ class MainActivity : AppCompatActivity() {
             destinationId == R.id.objItemLibraryFragment ||
             destinationId == R.id.therapistsFragment
         val addVisible = addOverrideVisible ?: addAvailable
-        val showExpandedBar = destinationId == R.id.clinicsFragment || isBottomBarExpanded
+        val showExpandedBar = isBottomBarAlwaysExpanded(destinationId) || isBottomBarExpanded
 
         binding.clinicsNavIcon.setColorFilter(if (clinicsSelected) selectedColor else inactiveColor)
         binding.clinicsNavText.setTextColor(if (clinicsSelected) selectedColor else inactiveColor)
@@ -235,16 +243,20 @@ class MainActivity : AppCompatActivity() {
         binding.addNavText.setTextColor(selectedColor)
         binding.bottomNavigationContent.isVisible = showExpandedBar
         binding.collapsedNavDot.isVisible = !showExpandedBar
-        binding.clinicsNavItem.isVisible = showExpandedBar
-        binding.libraryNavItem.isVisible = showExpandedBar
-        binding.accountNavItem.isVisible = showExpandedBar
+        binding.clinicsNavItem.isVisible = showExpandedBar && !addOnly
+        binding.libraryNavItem.isVisible = showExpandedBar && !addOnly
+        binding.accountNavItem.isVisible = showExpandedBar && (clinicsSelected || accountSelected)
         binding.addNavItem.isVisible = showExpandedBar && addVisible
-        binding.addNavSeparator.isVisible = showExpandedBar && addVisible
-        resizeBottomBar(expanded = showExpandedBar)
+        binding.addNavSeparator.isVisible = showExpandedBar && addVisible && !addOnly
+        resizeBottomBar(expanded = showExpandedBar, addOnly = addOnly)
     }
 
-    private fun resizeBottomBar(expanded: Boolean) {
-        val targetWidth = if (expanded) 312 else 64
+    private fun resizeBottomBar(expanded: Boolean, addOnly: Boolean) {
+        val targetWidth = when {
+            !expanded -> 64
+            addOnly -> 80
+            else -> 312
+        }
         val density = resources.displayMetrics.density
         val params = binding.bottomNavigationCard.layoutParams
         val targetWidthPx = (targetWidth * density).toInt()
