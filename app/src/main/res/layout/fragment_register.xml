@@ -25,6 +25,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/registerContent"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
@@ -38,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
+                    app:layout_constraintVertical_chainStyle="packed"
                     app:layout_constraintBottom_toTopOf="@id/registerCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -45,24 +48,17 @@
 
                     <FrameLayout
                         android:id="@+id/registerIconFrame"
-                        android:layout_width="72dp"
-                        android:layout_height="70dp"
-                        android:background="@drawable/bg_account_avatar">
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/bg_logo_surface">
 
                         <ImageView
-                            android:layout_width="72dp"
-                            android:layout_height="70dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_app_icon"
-                            app:tint="@color/slateIndigoDark" />
-
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginEnd="0dp"
-                            android:src="@drawable/ic_app_icon" />
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_logo" />
 
                     </FrameLayout>
 
@@ -88,7 +84,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="100dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/registerBrandGroup"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
